@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, session, url_for, redirect
 app = Flask(__name__)
 app.secret_key = os.urandom(24).encode('hex')
 
+ADMIN_CODE = 546238
+
 def connectToDB():
   connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
   try:
@@ -16,11 +18,23 @@ def connectToDB():
 @app.route('/')
 def mainIndex():
     return render_template('welcome.html')
+
+@app.route('/welcome')
+def welcome():
+    return render_template('welcome.html')
     
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    if request.method == 'POST':
+        username = request.form['username']
+        password1 = request.form['password1']
+        password2 = request.form['password2']
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+        adminCode = request.form['adminCode']
     
     return render_template('register.html')
 
@@ -31,10 +45,10 @@ def login():
     
    # if request.method == 'POST':
         #username = request.form['username']
-       # password = request.form['password']
+        #password = request.form['password']
 
         #query = "SELECT username, password FROM admins WHERE username = %s AND password = crypt(%s, password)"
-       # cur.execute(query, (username, password))
+        #cur.execute(query, (username, password))
         #results = cur.fetchone()
         
         #if results:
