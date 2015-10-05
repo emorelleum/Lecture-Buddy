@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24).encode('hex')
 
 def connectToDB():
-  connectionString = 'dbname=LectureBuddy user=postgres password=beatbox host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -15,7 +15,7 @@ def connectToDB():
 
 @app.route('/')
 def mainIndex():
-    return render_template('index.html')
+    return render_template('welcome.html')
     
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -48,7 +48,27 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('index.html')
+    return render_template('welcome.html')
+    
+@app.route('/homeAdmin')
+def homeAdmin():
+    return render_template('homeAdmin.html')
+    
+@app.route('/homeStudent')
+def homeStudent():
+    return render_template('homeStudent.html')
+    
+@app.route('/createQuestion')
+def createQuestion():
+    return render_template('createQuestion.html')
+    
+@app.route('/questionResponse')
+def questionResponse():
+    return render_template('questionResponse.html')
+    
+@app.route('/viewStatistics')
+def viewStatistics():
+    return render_template('viewStatistics.html')
     
 if __name__ == '__main__':
     app.debug=True
