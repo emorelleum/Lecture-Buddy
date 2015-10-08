@@ -109,13 +109,21 @@ def homeStudent():
 def createQuestion():
     return render_template('createQuestion.html')
     
-@app.route('/questionResponse')
-def questionResponse():
-    return render_template('questionResponse.html')
+@app.route('/previousQuestions')
+def previousQuestions():
+    return render_template('previousQuestions.html')
     
 @app.route('/viewStatistics')
 def viewStatistics():
     return render_template('viewStatistics.html')
+    
+@app.route('/questionBank')
+def questionBank():
+    return render_template('questionBank.html')
+    
+@app.route('/closedQuestions')
+def closedQuestions():
+    return render_template('closedQuestions.html')
     
 if __name__ == '__main__':
     app.debug=True
