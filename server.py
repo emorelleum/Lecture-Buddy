@@ -28,6 +28,9 @@ def register():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    admin = 0
+    errorMessage = ""
+    
     if request.method == 'POST':
         username = request.form['username']
         password1 = request.form['password1']
@@ -35,29 +38,59 @@ def register():
         firstName = request.form['firstName']
         lastName = request.form['lastName']
         adminCode = request.form['adminCode']
+        
+        if adminCode == ADMIN_CODE:
+            admin = 1
+            
+        if password1 == password2:
+            try:
+                #Insert Person Information
+                query = "SELECT username FROM person WHERE username = %s"
+                cur.execute(query % username)
+                results1 = cur.fetchall()
+                if not results1:
+                    try:
+                        #Insert Person Information
+                        query = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
+                        cur.execute(query, (firstName, lastName, admin, username, password1))
+                        conn.commit()
+                        return redirect(url_for('login'))
+                    except:
+                        print("Error Registering")
+                        errorMessage = "Error Registering"
+            except:
+                print("Username Already Exists")
+                errorMessage = "Username Already Exists"
+        else:
+            print("Passwords Do Not Match")
+            errorMessage = "Passwords Do Not Match"
+        
     
-    return render_template('register.html')
+    return render_template('register.html', error = errorMessage)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-   # if request.method == 'POST':
-        #username = request.form['username']
-        #password = request.form['password']
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-        #query = "SELECT username, password FROM admins WHERE username = %s AND password = crypt(%s, password)"
-        #cur.execute(query, (username, password))
-        #results = cur.fetchone()
+        query = "SELECT username, password, admin FROM person WHERE username = %s AND password = crypt(%s, password)"
+        cur.execute(query, (username, password))
+        results = cur.fetchone()
         
-        #if results:
-        #    session['username'] = results[0]
-        #    return redirect(url_for('home'))
-        #else:
-         #   errorMessage = "Username or Password Incorrect."
+        if results:
+            session['username'] = results[0]
+            if results[2]:
+                return redirect(url_for('homeAdmin'))
+            else:
+                return redirect(url_for('homeStudent'))
+        else:
+            errorMessage = "Username or Password Incorrect."
 
-    return render_template('login.html')
+    return render_template('login.html', error = errorMessage)
     
 @app.route('/logout')
 def logout():
