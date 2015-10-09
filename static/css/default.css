@@ -943,7 +943,7 @@ ul.contact li a.icon-rss:before
 .extra2 .ebox1,
 .extra2 .ebox2
 {
-	padding: 0em 10em;
+	padding: 0em 20em;
 }
 
 .extra2  .ebox1
@@ -1020,7 +1020,7 @@ ul.contact li a.icon-rss:before
 
 .form_settings span
 { float: left; 
-  width: 200px; 
+  width: 300px; 
   text-align: left;}
   
 .form_settings input, .form_settings textarea
