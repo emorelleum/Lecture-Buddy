@@ -1,4 +1,3 @@
-
 html, body
 {
 	height: 100%;
@@ -329,9 +328,26 @@ ul.contact li a.icon-rss:before
 
 .button-big
 {
-	padding: 1.6em 4em;
-	font-size: 1.4em;
-	font-weight: 900;
+
+	font-size: 2.5em;
+	height: 2em;
+	width: 8em;
+	margin: 1em;
+	font-weight: 900;	
+	display: inline-block;
+	padding: .8em .8em;
+	background: #FFC000;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.20em;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 800;
+	color: #FFF;
+	
 }
 
 /*********************************************************************************/
@@ -642,7 +658,8 @@ ul.contact li a.icon-rss:before
 #featured-wrapper
 {
 	overflow: hidden;
-	padding: 10em 0em;
+	padding-top: 3em;
+	padding-bottom: 8em;
 	background: #FFF;
 	text-align: center;
 }
@@ -1055,3 +1072,5 @@ ul.contact li a.icon-rss:before
   width: 14px;
   border: 0;
   background: none;}
+
+
