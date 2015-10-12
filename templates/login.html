@@ -5,19 +5,19 @@
 	<div id="featured-wrapper">
 		<div class="extra2 container">
 			<div class="ebox1">
-				<h1>Login</h1>
-				<span class="byline">Enter your information</span>
-
+				<div class="title">
+					<h2>Login</h2>
+					<span class="byline">Enter The Following Information</span>
+				</div>
 				<form action="/login" method="POST">
 					<div class="form_settings">
-					<p><span class="login">Username:</span><input class="contact" type="text" name="username" value="" /></p>
-					<p><span class="login">Password:</span><input class="contact" type="text" name="password" value="" /></p>
+						<p><span>Username:</span><input class="contact" type="text" name="username" value="" /></p>
+						<p><span>Password:</span><input class="contact" type="password" name="password" value="" /></p>
 					</div>
 					<input class="button" type="submit" name="login" value="Login"/>
-				</form>				
+				</form>
 			</div>		
 		</div>	
 	</div>
 </div>
-
 {% endblock %}

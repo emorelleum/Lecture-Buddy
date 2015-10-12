@@ -45,22 +45,26 @@ def register():
         if password1 == password2:
             try:
                 #Insert Person Information
-                query = "SELECT username FROM person WHERE username = %s"
+                query = "SELECT username FROM person WHERE username = '%s'"
                 cur.execute(query % username)
-                results1 = cur.fetchall()
-                if not results1:
+                results = cur.fetchall()
+                if not results:
                     try:
                         #Insert Person Information
-                        query = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
-                        cur.execute(query, (firstName, lastName, admin, username, password1))
+                        query1 = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
+                        cur.execute(query1, (firstName, lastName, str(admin), username, password1))
+                        
                         conn.commit()
                         return redirect(url_for('login'))
                     except:
                         print("Error Registering")
                         errorMessage = "Error Registering"
+                else:
+                    print("Username Is Already In Use")
+                    errorMessage = "Username Is Already In Use"
             except:
-                print("Username Already Exists")
-                errorMessage = "Username Already Exists"
+                print("Error Registering")
+                errorMessage = "Error Registering"
         else:
             print("Passwords Do Not Match")
             errorMessage = "Passwords Do Not Match"
@@ -73,23 +77,29 @@ def login():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    errorMessage = ''
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        query = "SELECT username, password, admin FROM person WHERE username = %s AND password = crypt(%s, password)"
-        cur.execute(query, (username, password))
-        results = cur.fetchone()
         
-        if results:
-            session['username'] = results[0]
-            if results[2]:
-                return redirect(url_for('homeAdmin'))
+        try:
+            query = "SELECT username, password, admin FROM person WHERE username = %s AND password = crypt(%s, password)"
+            cur.execute(query, (username, password))
+            results = cur.fetchone()
+            
+            if results:
+                session['username'] = results[0]
+                if results[2]:
+                    return redirect(url_for('homeAdmin'))
+                else:
+                    return redirect(url_for('homeStudent'))
             else:
-                return redirect(url_for('homeStudent'))
-        else:
-            errorMessage = "Username or Password Incorrect."
-
+                errorMessage = "Username or Password Incorrect."
+        except:
+            errorMessage = "Error On Login"
+            print("Error On Login")
+            
     return render_template('login.html', error = errorMessage)
     
 @app.route('/logout')
