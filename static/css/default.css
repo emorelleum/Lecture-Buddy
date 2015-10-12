@@ -1040,6 +1040,11 @@ ul.contact li a.icon-rss:before
   width: 300px; 
   text-align: left;}
   
+.form_settings .login
+{ float: none; 
+  width: 300px; 
+  text-align: left;}
+  
 .form_settings input, .form_settings textarea
 { padding: 5px; 
   width: 299px; 

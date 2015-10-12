@@ -6,12 +6,15 @@
 		<div class="extra2 container">
 			<div class="ebox1">
 				<h1>Login</h1>
-				<form action = "/login" action="Post">
-					<span><h2>Username: <input type="text" name="username"></h2></span>
-					<span><h2>Password: <input type="text" name="password"></h2></span>
-					<a href="/login" class="button">Login</a>
-				</form>
-				
+				<span class="byline">Enter your information</span>
+
+				<form action="/login" method="POST">
+					<div class="form_settings">
+					<p><span class="login">Username:</span><input class="contact" type="text" name="username" value="" /></p>
+					<p><span class="login">Password:</span><input class="contact" type="text" name="password" value="" /></p>
+					</div>
+					<input class="button" type="submit" name="login" value="Login"/>
+				</form>				
 			</div>		
 		</div>	
 	</div>
