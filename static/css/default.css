@@ -1044,8 +1044,8 @@ ul.contact li a.icon-rss:before
 { padding: 5px; 
   width: 299px; 
   font: 100% arial; 
-  border: 1px solid #E5E5DB; 
-  background: #FFF; 
+  border: 1px solid #000000; 
+  background: #D1D0CE; 
   color: #47433F;}
   
 .form_settings .submit
