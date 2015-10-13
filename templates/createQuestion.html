@@ -1,20 +1,59 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
+<script language="JavaScript" type="text/javascript">
+	function choices(select){
+		var selectedOption = select.options[select.selectedIndex];
+        if (selectedOption.value == "multipleChoice"){
+        	document.getElementById('choices').style.visibility="visible";
+        }
+	}
+	function choicesHide(){
+		document.getElementById('choices').style.visibility="hidden";
+	}
+</script>
+
 <div id="wrapper">
 	<div id="featured-wrapper">
 		<div class="extra2 container">
 			<div class="ebox1">
-				<div class="hexagon"><span class="icon icon-lightbulb"></span></div>
 				<div class="title">
 					<h2>Create Question</h2>
-					<span class="byline">Create Question Page</span>
+					<span class="byline">Enter The Following Information</span>
 				</div>
-				<p>Create Question Page</p>
-				<a href="/createQuestion" class="button">Create Question</a>
+				<form action="/register" method="POST">
+					<div class="form_settings">
+						<p><span>Question Type:</span>
+            			<select name="questionType" size=1 onchange=choices(this)>
+              				<option value="shortAnswer">Short Answer</option>
+				            <option value="multipleChoice">Multiple Choice</option>
+				            <option value="map">Map</option>
+            			</select></p>
+						<p><span>Upload Image:</span><input type="file" name="image" accept="image/*"></p>
+						<p><span>Question Text:</span><textarea class="contact textarea" rows="8" cols="50" name="questionText"></textarea></p>
+						<p><span>Answer:</span><textarea class="contact textarea" rows="8" cols="50" name="answer"></textarea></p>
+					</div>
+					<input class="button" type="submit" name="createQuestion" value="Create Question"/>
+				</form>
 			</div>		
 		</div>	
 	</div>
 </div>
+
+
+<div id="choices"> 
+	<center>
+	<div class="title">
+		<h2>Add Choices</h2>
+		<span class="byline">Add Choices To The Question</span>
+	</div>
+		<div class="form_settings">
+			<p><span>Username:</span><input class="contact" type="text" name="username" value="" /></p>
+			<p><span>Password:</span><input class="contact" type="password" name="password" value="" /></p>
+		</div>
+		<input class="button" onclick="choicesHide()" name="addChoice" value="Add Choice"/>
+	</center>
+</div>
+
 
 {% endblock %}
