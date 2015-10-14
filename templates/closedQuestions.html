@@ -1,15 +1,7 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
-<div id="wrapper">
-	<div id="featured-wrapper">
-		<div class="extra2 container">
-			<div class="ebox1">
-				<div class="hexagon"><span class="icon icon-lightbulb"></span></div>
-				<div class="title">
-					<h2>Closed Questions</h2>
-					<span class="byline">Closed Questions Page</span>
-				</div>
+
 				<div id="wrapper">
 					<div id="featured-wrapper">
 						<h1>Closed Questions</h1>
@@ -18,24 +10,19 @@
 						<table>
 						<tr>
 						<td><p class = "inline-label">What is the first...</td>
-						<td><a class = "button" href="/insertLinkHere">View</a></td>
-						<td><a class = "button" href="/insertLinkHere">Reopen</a></td>
+						<td><a class = "button" href="/viewStatistics">View</a></td>
+						<td><a class = "button" href="/viewQuestion">Reopen</a></td>
 						<td><a class = "button" href="/insertLinkHere">Delete</a></span></td>
 						</tr>
 						<tr>
 						<td><p class = "inline-label">Where is the locat...</td>
-						<td><a class = "button" href="/insertLinkHere">View</a></td>
-						<td><a class = "button" href="/insertLinkHere">Reopen</a></td>
+						<td><a class = "button" href="/viewStatistics">View</a></td>
+						<td><a class = "button" href="/viewQuestion">Reopen</a></td>
 						<td><a class = "button" href="/insertLinkHere">Delete</a></span></td>
 						</tr>
 						</table>
 					</div>
 				</div>
-				<p>Closed Questions Page</p>
-				<a href="/closedQuestions" class="button">Closed Questions</a>
-			</div>		
-		</div>	
-	</div>
-</div>
+
 
 {% endblock %}
