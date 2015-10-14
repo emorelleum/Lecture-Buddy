@@ -1074,3 +1074,9 @@ ul.contact li a.icon-rss:before
 	margin-left: -325px; 
 	margin-top: 135px; 
 }
+
+table
+{
+	margin-left:auto;
+	margin-right:auto;
+}
