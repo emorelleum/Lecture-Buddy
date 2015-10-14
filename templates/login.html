@@ -7,12 +7,13 @@
 			<div class="ebox1">
 				<div class="title">
 					<h2>Login</h2>
-					<span class="byline">Enter The Following Information</span>
+					<span class="byline">Enter The Following Information</span></br>
+					<span class="byline"><font color="red">{{error}}</font></span>
 				</div>
 				<form action="/login" method="POST">
 					<div class="form_settings">
-						<p><span>Username:</span><input class="contact" type="text" name="username" value="" /></p>
-						<p><span>Password:</span><input class="contact" type="password" name="password" value="" /></p>
+						<p><span>Username:</span><input class="contact" type="text" name="username" value="" maxlength="50"/></p>
+						<p><span>Password:</span><input class="contact" type="password" name="password" value="" maxlength="50"/></p>
 					</div>
 					<input class="button" type="submit" name="login" value="Login"/>
 				</form>

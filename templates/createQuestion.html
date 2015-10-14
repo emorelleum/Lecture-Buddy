@@ -2,15 +2,28 @@
 
 {% block content %}
 <script language="JavaScript" type="text/javascript">
+
 	function choices(select){
 		var selectedOption = select.options[select.selectedIndex];
         if (selectedOption.value == "multipleChoice"){
+        	document.getElementById('addchoices').style.visibility="visible";
         	document.getElementById('choices').style.visibility="visible";
         }
+        else if (selectedOption.value == "shortAnswer"){
+        	document.getElementById('addchoices').style.visibility="hidden";
+        	document.getElementById('choices').style.visibility="hidden";
+        }
+        else if (selectedOption.value == "map"){
+        	document.getElementById('addchoices').style.visibility="hidden";
+        	document.getElementById('choices').style.visibility="hidden";
+        }
 	}
+	
 	function choicesHide(){
+		document.getElementById('addchoices').style.visibility="hidden";
 		document.getElementById('choices').style.visibility="hidden";
 	}
+
 </script>
 
 <div id="wrapper">
@@ -21,7 +34,7 @@
 					<h2>Create Question</h2>
 					<span class="byline">Enter The Following Information</span>
 				</div>
-				<form action="/register" method="POST">
+				<form action="/homeAdmin" method="POST">
 					<div class="form_settings">
 						<p><span>Question Type:</span>
             			<select name="questionType" size=1 onchange=choices(this)>
@@ -30,8 +43,8 @@
 				            <option value="map">Map</option>
             			</select></p>
 						<p><span>Upload Image:</span><input type="file" name="image" accept="image/*"></p>
-						<p><span>Question Text:</span><textarea class="contact textarea" rows="8" cols="50" name="questionText"></textarea></p>
-						<p><span>Answer:</span><textarea class="contact textarea" rows="8" cols="50" name="answer"></textarea></p>
+						<p><span>Question Text:</span><textarea style="resize:none" rows="8" cols="50" name="questionText"></textarea></p>
+						<p><span>Answer:</span><textarea style="resize:none" rows="8" cols="50" name="answer"></textarea></p>
 					</div>
 					<input class="button" type="submit" name="createQuestion" value="Create Question"/>
 				</form>
@@ -41,17 +54,29 @@
 </div>
 
 
+<div id="addchoices"> 
+	<center>
+	<div class="title">
+		<h2>Add Choice</h2>
+		<span class="byline">Add A Choice For The Question</span>
+		<div class="form_settings">
+			<p><h3>Input Choice</h3><textarea style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
+		</div>
+		<input class="button" onclick="choicesHide()" name="addChoice" value="Add Choice"/>
+	</div>
+	</center>
+</div>
+
 <div id="choices"> 
 	<center>
 	<div class="title">
-		<h2>Add Choices</h2>
-		<span class="byline">Add Choices To The Question</span>
-	</div>
+		<h2>Choices</h2>
+		<span class="byline">Choices For Question</span>
 		<div class="form_settings">
-			<p><span>Username:</span><input class="contact" type="text" name="username" value="" /></p>
-			<p><span>Password:</span><input class="contact" type="password" name="password" value="" /></p>
+			<p><h3>Input Choice</h3><textarea style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
 		</div>
 		<input class="button" onclick="choicesHide()" name="addChoice" value="Add Choice"/>
+	</div>
 	</center>
 </div>
 

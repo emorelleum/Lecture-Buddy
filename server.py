@@ -42,7 +42,7 @@ def register():
         if adminCode == ADMIN_CODE:
             admin = 1
             
-        if password1 == password2:
+        if password1 == password2 and password1 != "":
             try:
                 #Insert Person Information
                 query = "SELECT username FROM person WHERE username = '%s'"
@@ -53,7 +53,6 @@ def register():
                         #Insert Person Information
                         query1 = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
                         cur.execute(query1, (firstName, lastName, str(admin), username, password1))
-                        
                         conn.commit()
                         return redirect(url_for('login'))
                     except:
