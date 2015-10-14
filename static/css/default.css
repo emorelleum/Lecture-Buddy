@@ -1066,8 +1066,7 @@ ul.contact li a.icon-rss:before
 	width: 400px; 
 	height: 300px; 
 	position: absolute; 
-	background: #D1D0CE;
-	border: solid #000000 5px; 
+	background: #FFFFFF;
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
@@ -1081,8 +1080,7 @@ ul.contact li a.icon-rss:before
 	width: 400px; 
 	height: 300px; 
 	position: absolute; 
-	background: #D1D0CE;
-	border: solid #000000 5px; 
+	background: #FFFFFF;
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
@@ -1090,4 +1088,22 @@ ul.contact li a.icon-rss:before
 	left: 50%;
 	margin-left: 335px; 
 	margin-top: 180px; 
+}
+
+	.buttonChoice
+{
+	padding: 3px;
+	float: right;
+	background: #FFC000;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #FFF;
+	text-align: center; 
+	vertical-align: middle;
 }

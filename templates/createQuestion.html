@@ -3,6 +3,8 @@
 {% block content %}
 <script language="JavaScript" type="text/javascript">
 
+var options = [];
+
 	function choices(select){
 		var selectedOption = select.options[select.selectedIndex];
         if (selectedOption.value == "multipleChoice"){
@@ -23,7 +25,24 @@
 		document.getElementById('addchoices').style.visibility="hidden";
 		document.getElementById('choices').style.visibility="hidden";
 	}
-
+	
+	function addchoice(){
+		var temp = document.getElementById('ChoiceToAdd').value;
+		options.push(temp);
+		writeChoices();
+	}
+	
+	function writeChoices(){
+		document.getElementById('allOptions').innerHTML = "</br>";
+		for (var i = 0; i < window.options.length; i++){ 
+			document.getElementById('allOptions').innerHTML += ("<p>" + window.options[i] + "<input class='buttonChoice' type='submit' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+		} 
+	}
+	
+	function deleteChoice(index){
+		window.options.splice(index,1);
+		writeChoices();
+	}
 </script>
 
 <div id="wrapper">
@@ -60,9 +79,9 @@
 		<h2>Add Choice</h2>
 		<span class="byline">Add A Choice For The Question</span>
 		<div class="form_settings">
-			<p><h3>Input Choice</h3><textarea style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
+			<p><h3>Input Choice</h3><textarea id="ChoiceToAdd" style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
 		</div>
-		<input class="button" onclick="choicesHide()" name="addChoice" value="Add Choice"/>
+		<input class="button" type="submit" onclick="addchoice()" name="addChoice" value="Add Choice"/>
 	</div>
 	</center>
 </div>
@@ -72,10 +91,8 @@
 	<div class="title">
 		<h2>Choices</h2>
 		<span class="byline">Choices For Question</span>
-		<div class="form_settings">
-			<p><h3>Input Choice</h3><textarea style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
+		<div id="allOptions">
 		</div>
-		<input class="button" onclick="choicesHide()" name="addChoice" value="Add Choice"/>
 	</div>
 	</center>
 </div>
