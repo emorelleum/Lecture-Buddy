@@ -335,6 +335,28 @@ ul.contact li a.icon-rss:before
 	color: #FFF;
 }
 
+.button-class{
+	font-size: 1.5em;
+	height: .8em;
+	width: 7em;
+	margin: .6em;
+	font-weight: 550;	
+	display: inline-block;
+	padding: .6em .6em;
+	background: #FFC000;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.12em;
+	text-decoration: none;
+	text-align: center; 
+	vertical-align: middle;
+	font-weight: 550;
+	color: #FFF;	
+}
+
 /*********************************************************************************/
 /* Heading Titles                                                                */
 /*********************************************************************************/
