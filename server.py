@@ -39,32 +39,35 @@ def register():
         lastName = request.form['lastName']
         adminCode = request.form['adminCode']
         
-        if adminCode == ADMIN_CODE:
+        if int(adminCode) == ADMIN_CODE:
             admin = 1
             
-        if password1 == password2:
-            try:
-                #Insert Person Information
-                query = "SELECT username FROM person WHERE username = '%s'"
-                cur.execute(query % username)
-                results = cur.fetchall()
-                if not results:
-                    try:
-                        #Insert Person Information
-                        query1 = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
-                        cur.execute(query1, (firstName, lastName, str(admin), username, password1))
-                        
-                        conn.commit()
-                        return redirect(url_for('login'))
-                    except:
-                        print("Error Registering")
-                        errorMessage = "Error Registering"
-                else:
-                    print("Username Is Already In Use")
-                    errorMessage = "Username Is Already In Use"
-            except:
-                print("Error Registering")
-                errorMessage = "Error Registering"
+        if password1 == password2 and password1 != "":
+            if firstName != "" and lastName != "" and username != "":
+                try:
+                    #Insert Person Information
+                    query = "SELECT username FROM person WHERE username = '%s'"
+                    cur.execute(query % username)
+                    results = cur.fetchall()
+                    if not results:
+                        try:
+                            #Insert Person Information
+                            query1 = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
+                            cur.execute(query1, (firstName, lastName, str(admin), username, password1))
+                            conn.commit()
+                            return redirect(url_for('login'))
+                        except:
+                            print("Error Registering")
+                            errorMessage = "Error Registering"
+                    else:
+                        print("Username Is Already In Use")
+                        errorMessage = "Username Is Already In Use"
+                except:
+                    print("Error Registering")
+                    errorMessage = "Error Registering"
+            else:
+                print "Either firstName, lastName, or username was left empty"
+                errorMessage = "Either First Name, Last Name, or Username Were Left Empty"
         else:
             print("Passwords Do Not Match")
             errorMessage = "Passwords Do Not Match"

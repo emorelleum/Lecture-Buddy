@@ -289,6 +289,8 @@ ul.contact li a.icon-rss:before
 	text-transform: uppercase;
 	font-weight: 600;
 	color: #FFF;
+	text-align: center; 
+	vertical-align: middle;
 }
 
 .button:hover
@@ -1060,9 +1062,9 @@ ul.contact li a.icon-rss:before
 /* Popup                                                                         */
 /*********************************************************************************/
 
-#choices{
-	width: 650px; 
-	height: 500px; 
+#addchoices{
+	width: 400px; 
+	height: 300px; 
 	position: absolute; 
 	background: #D1D0CE;
 	border: solid #000000 5px; 
@@ -1071,8 +1073,24 @@ ul.contact li a.icon-rss:before
 	visibility: hidden;
 	top: 50%;
 	left: 50%;
-	margin-left: -325px; 
-	margin-top: 135px; 
+	margin-left: -745px; 
+	margin-top: 180px; 
+}
+
+#choices{
+	width: 400px; 
+	height: 300px; 
+	position: absolute; 
+	background: #D1D0CE;
+	border: solid #000000 5px; 
+	z-index: 9; 
+	font-family: arial; 
+	visibility: hidden;
+	top: 50%;
+	left: 50%;
+
+	margin-left: 335px; 
+	margin-top: 180px; 
 }
 
 table
@@ -1080,3 +1098,4 @@ table
 	margin-left:auto;
 	margin-right:auto;
 }
+
