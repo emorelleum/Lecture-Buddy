@@ -35,7 +35,7 @@ var options = [];
 	function writeChoices(){
 		document.getElementById('allOptions').innerHTML = "</br>";
 		for (var i = 0; i < window.options.length; i++){ 
-			document.getElementById('allOptions').innerHTML += ("<p>" + window.options[i] + "<input class='buttonChoice' type='submit' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' name='option' style='float:left' value=" + window.options[i] + ">" + window.options[i].substring(0,49) + "<input class='buttonChoice' type='submit' onclick=deleteChoice(" + i + ") value='Delete'></p>");
 		} 
 	}
 	

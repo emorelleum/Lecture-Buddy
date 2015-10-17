@@ -58,6 +58,16 @@ a:hover
 	width: 1200px;
 }
 
+p.question-text
+{
+	font-size:18pt;
+}
+
+.inline-label
+{
+	font-size:16pt;
+}
+
 /*********************************************************************************/
 /* Image Style                                                                   */
 /*********************************************************************************/
@@ -323,6 +333,28 @@ ul.contact li a.icon-rss:before
 	vertical-align: middle;
 	font-weight: 800;
 	color: #FFF;
+}
+
+.button-class{
+	font-size: 1.5em;
+	height: .8em;
+	width: 7em;
+	margin: .6em;
+	font-weight: 550;	
+	display: inline-block;
+	padding: .6em .6em;
+	background: #FFC000;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.12em;
+	text-decoration: none;
+	text-align: center; 
+	vertical-align: middle;
+	font-weight: 550;
+	color: #FFF;	
 }
 
 /*********************************************************************************/
@@ -1086,6 +1118,7 @@ ul.contact li a.icon-rss:before
 	visibility: hidden;
 	top: 50%;
 	left: 50%;
+
 	margin-left: 335px; 
 	margin-top: 180px; 
 }
@@ -1107,3 +1140,9 @@ ul.contact li a.icon-rss:before
 	text-align: center; 
 	vertical-align: middle;
 }
+table
+{
+	margin-left:auto;
+	margin-right:auto;
+}
+

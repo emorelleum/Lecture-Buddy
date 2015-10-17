@@ -1,20 +1,31 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
-<div id="wrapper">
-	<div id="featured-wrapper">
-		<div class="extra2 container">
-			<div class="ebox1">
-				<div class="hexagon"><span class="icon icon-lightbulb"></span></div>
-				<div class="title">
-					<h2>Admin Home</h2>
-					<span class="byline">Admin Home Page</span>
+
+				<div id="wrapper">
+					<div id="featured-wrapper">
+						<h1>Launched Questions</h1>
+						<a class = "button-class" href="/insertLinkHere">391</a>
+						<a class = "button-class" href="/insertLinkHere">462</a>
+						
+						
+						<table>
+							
+						</tr>
+						<td><p class = "inline-label">What is the first ... Class: 391</td>
+						<td><a class = "button" href="/viewQuestion">View</a></td>
+						<td><a class = "button" href="/viewStatistics">Close</a></td>
+						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+						</tr>
+						<tr>
+						<td><p class = "inline-label">Where is the locat... Class: 391</td>
+						<td><a class = "button" href="/viewQuestion">View</a></td>
+						<td><a class = "button" href="/viewStatistics">Close</a></td>
+						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+						</tr>
+						</table>
+					</div>
 				</div>
-				<p>Admin Home Page</p>
-				<a href="/homeAdmin" class="button">Admin Home</a>
-			</div>		
-		</div>	
-	</div>
-</div>
+
 
 {% endblock %}

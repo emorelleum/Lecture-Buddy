@@ -1,20 +1,26 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
-<div id="wrapper">
-	<div id="featured-wrapper">
-		<div class="extra2 container">
-			<div class="ebox1">
-				<div class="hexagon"><span class="icon icon-lightbulb"></span></div>
-				<div class="title">
-					<h2>Question Bank</h2>
-					<span class="byline">Question Bank Page</span>
+
+				<div id="wrapper">
+					<div id="featured-wrapper">
+						<h1>Saved Questions</h1>
+						<table>
+						<tr>
+						<td><p class = "inline-label">What is the first...</td>
+						<td><a class = "button" href="/viewQuestion">View</a></td>
+						<td><a class = "button" href="/viewQuestion">Launch</a></td>
+						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+						</tr>
+						<tr>
+						<td><p class = "inline-label">Where is the locat...</td>
+						<td><a class = "button" href="/viewQuestion">View</a></td>
+						<td><a class = "button" href="/viewQuestion">Launch</a></td>
+						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+						</tr>
+						</table>
+					</div>
 				</div>
-				<p>Question Bank Page</p>
-				<a href="/questionBank" class="button">Question Bank</a>
-			</div>		
-		</div>	
-	</div>
-</div>
+
 
 {% endblock %}

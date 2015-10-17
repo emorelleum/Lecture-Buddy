@@ -130,6 +130,10 @@ def previousQuestions():
 def viewStatistics():
     return render_template('viewStatistics.html')
     
+@app.route('/viewQuestion')
+def viewQuestion():
+    return render_template('viewQuestion.html')
+    
 @app.route('/questionBank')
 def questionBank():
     return render_template('questionBank.html')
