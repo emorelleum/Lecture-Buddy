@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, session, url_for, redirect
 app = Flask(__name__)
 app.secret_key = os.urandom(24).encode('hex')
 
-ADMIN_CODE = 546238
+ADMIN_CODE = "546238"
 
 def connectToDB():
   connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
@@ -39,7 +39,7 @@ def register():
         lastName = request.form['lastName']
         adminCode = request.form['adminCode']
         
-        if int(adminCode) == ADMIN_CODE:
+        if adminCode == ADMIN_CODE:
             admin = 1
             
         if password1 == password2 and password1 != "":
@@ -93,6 +93,7 @@ def login():
             
             if results:
                 session['username'] = results[0]
+                session['admin'] = results[2]
                 if results[2]:
                     return redirect(url_for('homeAdmin'))
                 else:
@@ -112,6 +113,12 @@ def logout():
     
 @app.route('/homeAdmin')
 def homeAdmin():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     return render_template('homeAdmin.html')
     
 @app.route('/homeStudent')
@@ -120,6 +127,12 @@ def homeStudent():
     
 @app.route('/createQuestion', methods=['GET', 'POST'])
 def createQuestion():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+    
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -141,9 +154,9 @@ def createQuestion():
             
         if questionType == "shortAnswer":
             print "shortAnswer"
-        if questionType == "map":
+        elif questionType == "map":
             print "map"
-        if questionType == "multipleChoice":
+        elif questionType == "multipleChoice":
             print "multipleChoice"
             
     return render_template('createQuestion.html', error=errorMessage)
@@ -154,6 +167,12 @@ def previousQuestions():
     
 @app.route('/viewStatistics')
 def viewStatistics():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     return render_template('viewStatistics.html')
     
 @app.route('/viewQuestion')
@@ -162,10 +181,22 @@ def viewQuestion():
     
 @app.route('/questionBank')
 def questionBank():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     return render_template('questionBank.html')
     
 @app.route('/closedQuestions')
 def closedQuestions():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     return render_template('closedQuestions.html')
     
 if __name__ == '__main__':

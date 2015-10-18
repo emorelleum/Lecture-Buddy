@@ -12,11 +12,11 @@
 				</div>
 				<form action="/register" method="POST">
 					<div class="form_settings">
-						<p><span>First Name:</span><input class="contact" type="text" name="firstName" value="" maxlength="50" /></p>
-						<p><span>Last Name:</span><input class="contact" type="text" name="lastName" value=""  maxlength="50"/></p>
-						<p><span>Username:</span><input class="contact" type="text" name="username" value="" maxlength="50"/></p>
-						<p><span>Password:</span><input class="contact" type="password" name="password1" value="" maxlength="50"/></p>
-						<p><span>Re-Enter Password:</span><input class="contact" type="password" name="password2" value="" maxlength="50"/></p>
+						<p><span>First Name:</span><input class="contact" type="text" name="firstName" value="" maxlength="50" required/></p>
+						<p><span>Last Name:</span><input class="contact" type="text" name="lastName" value=""  maxlength="50" required/></p>
+						<p><span>Username:</span><input class="contact" type="text" name="username" value="" maxlength="50"required/></p>
+						<p><span>Password:</span><input class="contact" type="password" name="password1" value="" maxlength="50"required/></p>
+						<p><span>Re-Enter Password:</span><input class="contact" type="password" name="password2" value="" maxlength="50"required/></p>
 						<p><span>Admin Code (For Admins Only):</span><input class="contact" type="text" name="adminCode" value="" maxlength="50"/></p>
 					</div>
 					<input class="button" type="submit" name="register" value="Register"/>
