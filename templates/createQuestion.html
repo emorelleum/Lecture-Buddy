@@ -4,6 +4,7 @@
 <script language="JavaScript" type="text/javascript">
 
 var options = [];
+var correctAnswer = "";
 
 	function choices(select){
 		var selectedOption = select.options[select.selectedIndex];
@@ -32,10 +33,14 @@ var options = [];
 		writeChoices();
 	}
 	
+	function setAnswer(temp){
+		correctAnswer = temp.value;
+	}
+	
 	function writeChoices(){
 		document.getElementById('allOptions').innerHTML = "</br>";
 		for (var i = 0; i < window.options.length; i++){ 
-			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' name='option' style='float:left' value=" + window.options[i] + ">" + window.options[i].substring(0,49) + "<input class='buttonChoice' type='submit' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value=" + window.options[i] + ">" + window.options[i].substring(0,30) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
 		} 
 	}
 	
@@ -43,6 +48,7 @@ var options = [];
 		window.options.splice(index,1);
 		writeChoices();
 	}
+	
 </script>
 
 <div id="wrapper">
@@ -91,7 +97,7 @@ var options = [];
 	<div class="title">
 		<h2>Choices</h2>
 		<span class="byline">Choices For Question</span>
-		<div id="allOptions">
+		<div id="allOptions" style='height:300px; overflow:auto'>
 		</div>
 	</div>
 	</center>

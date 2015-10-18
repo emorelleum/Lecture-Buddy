@@ -1126,7 +1126,6 @@ ul.contact li a.icon-rss:before
 	.buttonChoice
 {
 	padding: 3px;
-	float: right;
 	background: #FFC000;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
