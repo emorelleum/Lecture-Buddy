@@ -118,9 +118,35 @@ def homeAdmin():
 def homeStudent():
     return render_template('homeStudent.html')
     
-@app.route('/createQuestion')
+@app.route('/createQuestion', methods=['GET', 'POST'])
 def createQuestion():
-    return render_template('createQuestion.html')
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        if 'questionType' in request.form:
+            questionType = request.form['questionType']
+        if 'image' in request.form:
+            image = request.form['image']
+        if 'questionText' in request.form:
+            questionText = request.form['questionText']
+        if 'answer' in request.form:
+            answer = request.form['answer']
+        if 'hiddenChoice' in request.form:
+            choices = request.form.getlist('hiddenChoice')
+        if 'correctAnswer' in request.form:
+            correctMultipleChoiceAnswer = request.form['correctAnswer']
+            
+        if questionType == "shortAnswer":
+            print "shortAnswer"
+        if questionType == "map":
+            print "map"
+        if questionType == "multipleChoice":
+            print "multipleChoice"
+            
+    return render_template('createQuestion.html', error=errorMessage)
     
 @app.route('/previousQuestions')
 def previousQuestions():

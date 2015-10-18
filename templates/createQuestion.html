@@ -35,12 +35,16 @@ var correctAnswer = "";
 	
 	function setAnswer(temp){
 		correctAnswer = temp.value;
+		document.getElementById('correctAnswer').value = correctAnswer;
+		document.getElementById('answerBox').value = correctAnswer;
 	}
 	
 	function writeChoices(){
 		document.getElementById('allOptions').innerHTML = "</br>";
+		document.getElementById('createForm').innerHTML = "</br><input type='hidden' id='correctAnswer' name='correctAnswer' value='" + correctAnswer +"'>";
 		for (var i = 0; i < window.options.length; i++){ 
-			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value=" + window.options[i] + ">" + window.options[i].substring(0,30) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value='" + window.options[i] + "'>" + window.options[i].substring(0,30) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			document.getElementById('createForm').innerHTML += ("<input type='hidden' name='hiddenChoice' value='" + window.options[i] + "'>");
 		} 
 	}
 	
@@ -58,8 +62,9 @@ var correctAnswer = "";
 				<div class="title">
 					<h2>Create Question</h2>
 					<span class="byline">Enter The Following Information</span>
+					<span class="byline"><font color="red">{{error}}</font></span>
 				</div>
-				<form action="/homeAdmin" method="POST">
+				<form action="/createQuestion" method="POST">
 					<div class="form_settings">
 						<p><span>Question Type:</span>
             			<select name="questionType" size=1 onchange=choices(this)>
@@ -69,7 +74,10 @@ var correctAnswer = "";
             			</select></p>
 						<p><span>Upload Image:</span><input type="file" name="image" accept="image/*"></p>
 						<p><span>Question Text:</span><textarea style="resize:none" rows="8" cols="50" name="questionText"></textarea></p>
-						<p><span>Answer:</span><textarea style="resize:none" rows="8" cols="50" name="answer"></textarea></p>
+						<p><span>Answer:</span><textarea id='answerBox' style="resize:none" rows="8" cols="50" name="answer"></textarea></p>
+						<div id="createForm" style='visibility: hidden'>
+							
+						</div>
 					</div>
 					<input class="button" type="submit" name="createQuestion" value="Create Question"/>
 				</form>

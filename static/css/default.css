@@ -288,7 +288,7 @@ ul.contact li a.icon-rss:before
 {
 	display: inline-block;
 	padding: 1.3em 3em;
-	background: #FFC000;
+	background: #04B45F;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 	-o-transition: opacity 0.25s ease-in-out;
@@ -320,7 +320,7 @@ ul.contact li a.icon-rss:before
 	font-weight: 900;	
 	display: inline-block;
 	padding: .8em .8em;
-	background: #FFC000;
+	background: #04B45F;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 	-o-transition: opacity 0.25s ease-in-out;
@@ -343,7 +343,7 @@ ul.contact li a.icon-rss:before
 	font-weight: 550;	
 	display: inline-block;
 	padding: .6em .6em;
-	background: #FFC000;
+	background: #04B45F;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 	-o-transition: opacity 0.25s ease-in-out;
@@ -390,7 +390,7 @@ ul.contact li a.icon-rss:before
 	{
 		overflow: hidden;
 		padding: 0em 0em 0em 0em;
-		background: #FFC000 url(images/overlay.png) repeat;
+		background: #04B45F url(images/overlay.png) repeat;
 	}
 
 	#header
@@ -984,7 +984,7 @@ ul.contact li a.icon-rss:before
 	width: 120px;
 	height: 80px;
 	line-height: 80px;
-	background: #FFC000;
+	background: #04B45F;
 	position: relative;
 	text-align: center;
 	color: #FFF;
@@ -999,7 +999,7 @@ ul.contact li a.icon-rss:before
 	height: 0;
 	border-left: 60px solid transparent;
 	border-right: 60px solid transparent;
-	border-bottom: 30px solid #FFC000;
+	border-bottom: 30px solid #04B45F;
 }
 .hexagon:after {
 	content: "";
@@ -1010,7 +1010,7 @@ ul.contact li a.icon-rss:before
 	height: 0;
 	border-left: 60px solid transparent;
 	border-right: 60px solid transparent;
-	border-top: 30px solid #FFC000;
+	border-top: 30px solid #04B45F;
 }
 
 #portfolio
@@ -1126,7 +1126,7 @@ ul.contact li a.icon-rss:before
 	.buttonChoice
 {
 	padding: 3px;
-	background: #FFC000;
+	background: #04B45F;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 	-o-transition: opacity 0.25s ease-in-out;
