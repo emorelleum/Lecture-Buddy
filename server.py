@@ -127,22 +127,33 @@ def homeStudent():
     
 @app.route('/createQuestion', methods=['GET', 'POST'])
 def createQuestion():
+    #Checks to make sure that the user is an admin and logged in
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('welcome'))
     
+    #Connect to the database.
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    #Instantiate Variables
     errorMessage = ""
+    questionType = ""
+    imageName = ""
+    questionText = ""
+    answer = ""
+    choices = []
+    correctMultipleChoiceAnswer = ""
     
+    #If the user is attempting to create a question.
     if request.method == 'POST':
         if 'questionType' in request.form:
             questionType = request.form['questionType']
         if 'image' in request.form:
             image = request.form['image']
+            imageName = request.form['image']
         if 'questionText' in request.form:
             questionText = request.form['questionText']
         if 'answer' in request.form:
@@ -152,13 +163,65 @@ def createQuestion():
         if 'correctAnswer' in request.form:
             correctMultipleChoiceAnswer = request.form['correctAnswer']
             
-        if questionType == "shortAnswer":
-            print "shortAnswer"
-        elif questionType == "map":
-            print "map"
-        elif questionType == "multipleChoice":
-            print "multipleChoice"
+        #Grab the adminID in order to insert the question into the database.
+        try:
+            query1 = "SELECT personid FROM person WHERE username = '%s'"
+            cur.execute(query1 % session['username'])
+            result = cur.fetchone()
+            adminCreator = result[0]
             
+            #If the question is a short answer
+            if questionType == "shortAnswer":
+                try:
+                    #Insert Person Information
+                    query = "INSERT INTO short_answer_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
+                    cur.execute(query, (questionText, imageName, adminCreator, answer))
+                    conn.commit()
+                except:
+                    errorMessage = "Error Creating Short Answer Question"
+                    print "Error Creating Short Answer Question"
+                
+            elif questionType == "map":
+                try:
+                    #Insert Person Information
+                    query = "INSERT INTO map_selection_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
+                    cur.execute(query, (questionText, image, adminCreator, answer))
+                    conn.commit()
+                except:
+                    errorMessage = "Error Creating Map Question"
+                    print "Error Creating Map Question"
+                    
+            elif questionType == "multipleChoice":
+                try:
+                    #Insert Person Information
+                    query = "INSERT INTO multiple_choice_q (question, image, adminowner) VALUES (%s, %s, %s)"
+                    cur.execute(query, (questionText, image, adminCreator))
+                    conn.commit()
+                    try:
+                        query = "SELECT questionid FROM multiple_choice_q WHERE question = '%s'"
+                        cur.execute(query % questionText)
+                        result1 = cur.fetchone()
+                        questionid = result1[0]
+                    except:
+                        errorMessage = "Error Creating Multiple choice Question"
+                        print "Error Getting Question ID"
+                    try:
+                        query = "INSERT INTO choices (choicetext, questionid) VALUES (%s, %s)"
+                        for option in choices:
+                            cur.execute(query, (option, questionid))
+                        conn.commit()
+                    except:
+                        errorMessage = "Error Creating Multiple choice Question"
+                        print "Error Inserting Choices"
+                        
+                    #Now you have to get the choiceID that matches the answer and update the question table with the correct answer id.
+                except:
+                    errorMessage = "Error Creating Multiple Choice Question"
+                    print "Error Creating Multiple Choice Question"
+        except:
+            errorMessage = "Error Creating Question. You are not logged in."
+            print "Error Creating Question. You are not logged in."
+           
     return render_template('createQuestion.html', error=errorMessage)
     
 @app.route('/previousQuestions')

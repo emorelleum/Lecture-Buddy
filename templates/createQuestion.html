@@ -11,14 +11,17 @@ var correctAnswer = "";
         if (selectedOption.value == "multipleChoice"){
         	document.getElementById('addchoices').style.visibility="visible";
         	document.getElementById('choices').style.visibility="visible";
+        	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*'>";
         }
         else if (selectedOption.value == "shortAnswer"){
         	document.getElementById('addchoices').style.visibility="hidden";
         	document.getElementById('choices').style.visibility="hidden";
+        	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*'>";
         }
         else if (selectedOption.value == "map"){
         	document.getElementById('addchoices').style.visibility="hidden";
         	document.getElementById('choices').style.visibility="hidden";
+        	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*' required>";
         }
 	}
 	
@@ -49,6 +52,11 @@ var correctAnswer = "";
 	}
 	
 	function deleteChoice(index){
+		if(window.options[index] == correctAnswer){
+			correctAnswer = "";
+			document.getElementById('correctAnswer').value = correctAnswer;
+			document.getElementById('answerBox').value = correctAnswer;
+		}
 		window.options.splice(index,1);
 		writeChoices();
 	}
@@ -61,7 +69,7 @@ var correctAnswer = "";
 			<div class="ebox1">
 				<div class="title">
 					<h2>Create Question</h2>
-					<span class="byline">Enter The Following Information</span>
+					<span class="byline">Enter The Following Information</span></br>
 					<span class="byline"><font color="red">{{error}}</font></span>
 				</div>
 				<form action="/createQuestion" method="POST">
@@ -72,7 +80,7 @@ var correctAnswer = "";
 				            <option value="multipleChoice">Multiple Choice</option>
 				            <option value="map">Map</option>
             			</select></p>
-						<p><span>Upload Image:</span><input type="file" name="image" accept="image/*"></p>
+						<p id='imageField'><span>Upload Image:</span><input type="file" name="image" accept="image/*"></p>
 						<p><span>Question Text:</span><textarea style="resize:none" rows="8" cols="50" name="questionText" required></textarea></p>
 						<p><span>Answer:</span><textarea id='answerBox' style="resize:none" rows="8" cols="50" name="answer"></textarea></p>
 						<div id="createForm" style='visibility: hidden'>
