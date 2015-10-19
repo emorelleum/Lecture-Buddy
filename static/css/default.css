@@ -333,8 +333,10 @@ ul.contact li a.icon-rss:before
 	vertical-align: middle;
 	font-weight: 800;
 	color: #FFF;
-}
 
+	border-radius: 5px;
+	border: 2px solid #3D3D3D; 
+}
 .button-class{
 	font-size: 1.5em;
 	height: .8em;
@@ -1095,7 +1097,7 @@ ul.contact li a.icon-rss:before
 /*********************************************************************************/
 
 #addchoices{
-	width: 400px; 
+	width: 300px; 
 	height: 300px; 
 	position: absolute; 
 	background: #FFFFFF;
@@ -1104,12 +1106,12 @@ ul.contact li a.icon-rss:before
 	visibility: hidden;
 	top: 50%;
 	left: 50%;
-	margin-left: -745px; 
+	margin-left: -650px; 
 	margin-top: 180px; 
 }
 
 #choices{
-	width: 400px; 
+	width: 300px; 
 	height: 300px; 
 	position: absolute; 
 	background: #FFFFFF;

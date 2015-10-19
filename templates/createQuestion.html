@@ -45,8 +45,18 @@ var correctAnswer = "";
 	function writeChoices(){
 		document.getElementById('allOptions').innerHTML = "</br>";
 		document.getElementById('createForm').innerHTML = "</br><input type='hidden' id='correctAnswer' name='correctAnswer' value='" + correctAnswer +"'>";
-		for (var i = 0; i < window.options.length; i++){ 
-			document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value='" + window.options[i] + "'>" + window.options[i].substring(0,30) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+		for (var i = 0; i < window.options.length; i++){
+			if(correctAnswer == ""){
+				correctAnswer = window.options[i];
+				document.getElementById('correctAnswer').value = correctAnswer;
+				document.getElementById('answerBox').value = correctAnswer;
+			}
+			if(window.options[i] == correctAnswer){
+				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' checked='checked' value='" + window.options[i] + "'>" + window.options[i].substring(0,20) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			}
+			else{
+				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value='" + window.options[i] + "'>" + window.options[i].substring(0,20) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+			}
 			document.getElementById('createForm').innerHTML += ("<input type='hidden' name='hiddenChoice' value='" + window.options[i] + "'>");
 		} 
 	}
@@ -101,7 +111,7 @@ var correctAnswer = "";
 		<h2>Add Choice</h2>
 		<span class="byline">Add A Choice For The Question</span>
 		<div class="form_settings">
-			<p><h3>Input Choice</h3><textarea id="ChoiceToAdd" style="resize:none" rows="4" cols="50" name="choice" value=""></textarea></p>
+			<p><h3>Input Choice</h3><textarea id="ChoiceToAdd" style="resize:none; width:250px" rows="4" cols="50" name="choice" value=""></textarea></p>
 		</div>
 		<input class="button" type="submit" onclick="addchoice()" name="addChoice" value="Add Choice"/>
 	</div>
