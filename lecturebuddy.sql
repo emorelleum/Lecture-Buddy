@@ -49,7 +49,8 @@ SET default_with_oids = false;
 
 CREATE TABLE choices (
     choiceid integer NOT NULL,
-    choicetext character varying(150) NOT NULL
+    choicetext character varying(150) NOT NULL,
+    questionid integer
 );
 
 
@@ -395,7 +396,7 @@ ALTER TABLE ONLY short_answer_q ALTER COLUMN questionid SET DEFAULT nextval('sho
 -- Data for Name: choices; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY choices (choiceid, choicetext) FROM stdin;
+COPY choices (choiceid, choicetext, questionid) FROM stdin;
 \.
 
 
@@ -472,10 +473,6 @@ SELECT pg_catalog.setval('multiple_choice_q_questionid_seq', 1, false);
 --
 
 COPY person (personid, firstname, lastname, admin, username, password) FROM stdin;
-1	Tyler	Weisbeck	t	TylaDubya	beatbox
-2	Cassie	Sciortino	t	seashoretea	$2a$06$GypTvgzT0SMLWzaXTCiUce4bAmUuoocPEDprqn8kGIvRmi7Vgv/Va
-3	Jacob	Weisbeck	f	jdubs	$2a$06$p2nOkZgo78ImBrMnNYuIsOCRo5s97mWyF6NDUYSxcNI5dLvXnofnq
-4	Jillian	Weisbeck	f	jweis	$2a$06$5cjNdP8WL/AKgGL1iON9QOM6oGr0za6E1Cu4qv.rvgNhTPE3jo8Ta
 \.
 
 
@@ -491,7 +488,7 @@ COPY person_class_join (personid, classid) FROM stdin;
 -- Name: person_personid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('person_personid_seq', 4, true);
+SELECT pg_catalog.setval('person_personid_seq', 1, false);
 
 
 --

@@ -195,26 +195,40 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO multiple_choice_q (question, image, adminowner) VALUES (%s, %s, %s)"
-                    cur.execute(query, (questionText, image, adminCreator))
+                    cur.execute(query, (questionText, imageName, adminCreator))
                     conn.commit()
                     try:
                         query = "SELECT questionid FROM multiple_choice_q WHERE question = '%s'"
                         cur.execute(query % questionText)
                         result1 = cur.fetchone()
                         questionid = result1[0]
+                        try:
+                            query = "INSERT INTO choices (choicetext, questionid) VALUES (%s, %s)"
+                            for option in choices:
+                                cur.execute(query, (option, questionid))
+                            conn.commit()
+                            try:
+                                query = "SELECT choiceid FROM choices WHERE choicetext = '%s'"
+                                cur.execute(query % correctMultipleChoiceAnswer)
+                                result = cur.fetchone()
+                                answerid = result[0]
+                                try:
+                                    update = "UPDATE multiple_choice_q SET answerid = %s WHERE questionid = %s"
+                                    cur.execute(update, (answerid, questionid))
+                                    conn.commit()
+                                except:
+                                    errorMessage = "Error Creating Multiple Choice Question"
+                                    print "Error Updating Question Table with Answerid"
+                            except:
+                                errorMessage = "Error Creating Multiple Choice Question"
+                                print "Error Getting Choiceid"
+                        except:
+                            errorMessage = "Error Creating Multiple Choice Question"
+                            print "Error Inserting Choices"
                     except:
                         errorMessage = "Error Creating Multiple choice Question"
                         print "Error Getting Question ID"
-                    try:
-                        query = "INSERT INTO choices (choicetext, questionid) VALUES (%s, %s)"
-                        for option in choices:
-                            cur.execute(query, (option, questionid))
-                        conn.commit()
-                    except:
-                        errorMessage = "Error Creating Multiple choice Question"
-                        print "Error Inserting Choices"
-                        
-                    #Now you have to get the choiceID that matches the answer and update the question table with the correct answer id.
+                    
                 except:
                     errorMessage = "Error Creating Multiple Choice Question"
                     print "Error Creating Multiple Choice Question"
