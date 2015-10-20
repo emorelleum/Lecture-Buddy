@@ -1147,3 +1147,37 @@ table
 	margin-right:auto;
 }
 
+#createClass{
+	width: 400px; 
+	height: 250px; 
+	position: absolute; 
+	background: #FFFFFF;
+	border: 4px solid #000000; 
+	z-index: 9; 
+	font-family: arial; 
+	visibility: hidden;
+	top: 60%;
+	left: 37%;
+
+}
+
+	.classButton
+{
+	display: inline;
+	padding: .5em 1em;
+	background: #04B45F;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.20em;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #FFF;
+	text-align: center; 
+	vertical-align: middle;
+	margin-right: 10px; 
+}
+

@@ -1,31 +1,61 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
+<script language="JavaScript" type="text/javascript">
 
-				<div id="wrapper">
-					<div id="featured-wrapper">
-						<h1>Launched Questions</h1>
-						<a class = "button-class" href="/insertLinkHere">391</a>
-						<a class = "button-class" href="/insertLinkHere">462</a>
-						
-						
-						<table>
-							
-						</tr>
-						<td><p class = "inline-label">What is the first ... Class: 391</td>
-						<td><a class = "button" href="/viewQuestion">View</a></td>
-						<td><a class = "button" href="/viewStatistics">Close</a></td>
-						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
-						</tr>
-						<tr>
-						<td><p class = "inline-label">Where is the locat... Class: 391</td>
-						<td><a class = "button" href="/viewQuestion">View</a></td>
-						<td><a class = "button" href="/viewStatistics">Close</a></td>
-						<td><a class = "button" href="/insertLinkHere">Delete</a></td>
-						</tr>
-						</table>
-					</div>
-				</div>
+	function showCreateClass(){
+			document.getElementById('createClass').style.visibility="visible";
+	}
+	function hideCreateClass(){
+			document.getElementById('createClass').style.visibility="hidden";
+	}
+	
+</script>
+<div id="wrapper">
+	<div id="featured-wrapper">
+		<div class="title">
+			<h2 style="float:centered">Home</h2>
+			<input style="float:right" class="classButton" type="submit" onclick="showCreateClass()" name="createClass" value="Create Class"/>
+		</div>
+	</div>
+</div>
+<!---					
+		<a class = "button-class" href="/insertLinkHere">391</a>
+		<a class = "button-class" href="/insertLinkHere">462</a>
+		
+		
+		<table>
+			
+		</tr>
+		<td><p class = "inline-label">What is the first ... Class: 391</td>
+		<td><a class = "button" href="/viewQuestion">View</a></td>
+		<td><a class = "button" href="/viewStatistics">Close</a></td>
+		<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+		</tr>
+		<tr>
+		<td><p class = "inline-label">Where is the locat... Class: 391</td>
+		<td><a class = "button" href="/viewQuestion">View</a></td>
+		<td><a class = "button" href="/viewStatistics">Close</a></td>
+		<td><a class = "button" href="/insertLinkHere">Delete</a></td>
+		</tr>
+		</table>
+	</div>
+</div>
+-->
 
-
+<div id="createClass"> 
+	<center>
+	<div class="title">
+		<h2>Create Class</h2>
+		<span class="byline">Create A Class</span>
+		<form action="/createClass" method="POST">
+			<div class="form_settings">
+				<p style="margin:20px"><span style="width:100px">Class Name:</span><input style="width:200px" type="text" name="className" value="" maxlength="50" required/></p>
+				<p style="margin:20px"><span style="width:100px">Class Section:</span><input style="width:200px" type="number" name="section" value="" max="50" min="1" required/></p>
+			</div>
+			<input class="button" type="submit"  name="CreateClass" value="Create Class"/>
+		</form>
+	</div>
+	</center>
+</div>
 {% endblock %}

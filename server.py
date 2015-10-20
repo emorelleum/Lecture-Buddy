@@ -238,6 +238,10 @@ def createQuestion():
            
     return render_template('createQuestion.html', error=errorMessage)
     
+@app.route('/createClass')
+def createClass():
+    return render_template('adminHome.html')    
+
 @app.route('/previousQuestions')
 def previousQuestions():
     return render_template('previousQuestions.html')
