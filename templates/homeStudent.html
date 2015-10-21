@@ -2,19 +2,54 @@
 
 {% block content %}
 
-				<div id="wrapper">
-					<div id="featured-wrapper">
-						<h1>Open Questions</h1>
-						<a class = "button-class" href="/insertLinkHere">391</a>
-						<a class = "button-class" href="/insertLinkHere">462</a>
-						<table class="center">
-							<tr><td><p class = "inline-label"><span>What is the first...</td><td> <a class = "button" href="/insertLinkHere">Answer</a></td></tr>
-							<tr><td><p class = "inline-label"><span>Where is the locat...</td><td> <a class = "button" href="/insertLinkHere">Answer</a></td></tr>
-						</table>
+<script language="JavaScript" type="text/javascript">
 
-						
-					</div>
-				</div>
+	function showJoinClass(){
+			document.getElementById('joinClass').style.visibility="visible";
+	}
+	function hideJoinClass(){
+			document.getElementById('joinClass').style.visibility="hidden";
+	}
+	
+</script>
+<div id="wrapper">
+	<div id="featured-wrapper">
+		<div class="title">
+			<h2 style="float:centered">Home</h2>
+			<input style="float:right" class="classButton" type="submit" onclick="showJoinClass()" name="joinClass" value="Join Class"/>
+		</div>
+	</div>
+</div>
 
+<div id="joinClass"> 
+	<center>
+	<div class="title">
+		<h2>Join Class</h2>
+		<span class="byline">Join A Class</span>
+		<form action="/joinClass" method="POST">
+			<div id=classes class="form_settings">
+				<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1></select></p>
+			</div>
+			<input class="button" type="submit"  name="joinClass" value="Join Class"/>
+		</form>
+	</div>
+	</center>
+</div>
+<!--
+<div id="wrapper">
+	<div id="featured-wrapper">
+		<h1>Home</h1>
+		
+		<a class = "button-class" href="/insertLinkHere">391</a>
+		<a class = "button-class" href="/insertLinkHere">462</a>
+		<table class="center">
+			<tr><td><p class = "inline-label"><span>What is the first...</td><td> <a class = "button" href="/insertLinkHere">Answer</a></td></tr>
+			<tr><td><p class = "inline-label"><span>Where is the locat...</td><td> <a class = "button" href="/insertLinkHere">Answer</a></td></tr>
+		</table>
 
+		
+	</div>
+</div>
+
+-->
 {% endblock %}
