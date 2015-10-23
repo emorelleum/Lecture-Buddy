@@ -80,7 +80,7 @@ def login():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    errorMessage = ''
+    errorMessage = ""
     
     if request.method == 'POST':
         username = request.form['username']
@@ -121,9 +121,49 @@ def homeAdmin():
         
     return render_template('homeAdmin.html')
     
-@app.route('/homeStudent')
+@app.route('/homeStudent', methods=['GET', 'POST'])
 def homeStudent():
-    return render_template('homeStudent.html')
+    if 'username' not in session:
+        return redirect(url_for('welcome'))
+    
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    displayClasses = []
+    personClasses = []
+    
+    try:
+        query = "SELECT classid, classname, section FROM class"
+        cur.execute(query)
+        classes = cur.fetchall()
+        try:
+            query = "SELECT personid FROM person WHERE username = '%s'"
+            cur.execute(query % session['username'])
+            result = cur.fetchone()
+            personid = result[0]
+            try:
+                query = "SELECT classid FROM person_class_join WHERE personid = %s"
+                cur.execute(query % personid)
+                results = cur.fetchall()
+                
+                for item in results:
+                    personClasses.append(item[0])
+                for item2 in classes:
+                    if item2[0] not in personClasses:
+                        temp = "" + str(item2[1]) + " " + str(item2[2])
+                        displayClasses.append(temp)
+            except:
+                errorMessage = "Error Getting Person's Classes"
+                print "Error Getting Person's Classes" 
+        except:
+            errorMessage = "Error Getting Personid"
+            print "Error Getting Personid" 
+    except:
+        errorMessage = "Error Gathering All Classes"
+        print "Error Gathering All Classes"
+    
+    return render_template('homeStudent.html', error = errorMessage, classes = displayClasses)
     
 @app.route('/createQuestion', methods=['GET', 'POST'])
 def createQuestion():
@@ -238,9 +278,78 @@ def createQuestion():
            
     return render_template('createQuestion.html', error=errorMessage)
     
-@app.route('/createClass')
+@app.route('/createClass', methods=['GET', 'POST'])
 def createClass():
-    return render_template('adminHome.html')    
+    #Connect to the database.
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        className = request.form['className']
+        section = request.form['section']
+        
+        try:
+            query = "SELECT classname, section FROM class WHERE classname = %s AND section = %s"
+            cur.execute(query, (className, section))
+            results = cur.fetchone()
+            
+            if not results:
+                try:
+                    query = "INSERT INTO class (classname, section) VALUES (%s, %s)"
+                    cur.execute(query, (className, section))
+                    conn.commit()
+                except:
+                    errorMessage = "Error Inserting New Class"
+                    print "Error Inserting New Class"
+            else:
+                errorMessage = "Class Already Exists"
+                print "Class Already Exists"
+        
+        except:
+            errorMessage = "Error Checking For Class Name and Section"
+            print "Error Checking For Class Name and Section"
+        
+    return render_template('homeAdmin.html', error = errorMessage)    
+
+@app.route('/joinClass', methods=['GET', 'POST'])
+def joinClass():
+    #Connect to the database.
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        className = request.form['availableClasses']
+        name = className.rsplit(' ', 1)[0]
+        section = className.rsplit(' ', 1)[1]
+        try:
+            query = "SELECT personid FROM person WHERE username = '%s'"
+            cur.execute(query % session['username'])
+            result = cur.fetchone()
+            personid = result[0]
+            try:
+                query = "SELECT classid FROM class WHERE classname = %s AND section = %s"
+                cur.execute(query, (name, section))
+                results = cur.fetchone()
+                classid = results[0]
+                try:
+                    query1 = "INSERT INTO person_class_join (personid, classid) VALUES (%s, %s)"
+                    cur.execute(query1, (personid, classid))
+                    conn.commit()
+                except:
+                    errorMessage = "Error Joining New Class"
+                    print "Error Inserting New Class"
+            except:
+                errorMessage = "Error Joining New Class"
+                print "Error Getting Classid"
+        except:
+            errorMessage = "Error Joining New Class"
+            print "Error Getting Personid"
+        
+    return render_template('homeStudent.html', error = errorMessage)  
 
 @app.route('/previousQuestions')
 def previousQuestions():

@@ -1195,3 +1195,23 @@ table
 	margin-right: 10px; 
 }
 
+	.closeButton
+{
+	display: inline;
+	float: right;
+	padding: .25em .5em;
+	background: #04B45F;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.20em;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #FFF;
+	text-align: center; 
+	vertical-align: middle;
+}
+

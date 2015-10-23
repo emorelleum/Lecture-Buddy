@@ -24,11 +24,16 @@
 <div id="joinClass"> 
 	<center>
 	<div class="title">
-		<h2>Join Class</h2>
+		<h2 style="display: inline; margin-left:60px">Join Class</h2>
+		<input class="closeButton" type="submit"  name="exit" value="X" onclick="hideJoinClass()"/></br>
 		<span class="byline">Join A Class</span>
 		<form action="/joinClass" method="POST">
 			<div id=classes class="form_settings">
-				<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1></select></p>
+				<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1>
+					{% for class in classes %}
+						<option value='{{class}}'>{{class}}</option>
+					{% endfor %}
+				</select></p>
 			</div>
 			<input class="button" type="submit"  name="joinClass" value="Join Class"/>
 		</form>
