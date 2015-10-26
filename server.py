@@ -1,5 +1,6 @@
 import psycopg2
 import psycopg2.extras
+import time
 import os
 
 from flask import Flask, render_template, request, session, url_for, redirect
@@ -9,7 +10,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=1QAZ3edc host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -118,7 +119,20 @@ def homeAdmin():
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('welcome'))
+    
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    try:
+        query = "SELECT short_answer_q.text, class.classname FROM person, class, short_answer_q, question_instance WHERE short_answer_q.questionid = question_instance.questionid AND class.classid = quesiton_instance.classid AND short_answer_q.adminowner = person.personid AND person.username = %s"
+        cur.execute(query % session['username'])
+        openQs = cur.fetchall()
+    except:
+        errorMessage = "Error Gathering All Classes"
+        print "Error Gathering All Classes"
         
+    errorMessage = ""
+    
     return render_template('homeAdmin.html')
     
 @app.route('/homeStudent', methods=['GET', 'POST'])
@@ -365,9 +379,51 @@ def viewStatistics():
         
     return render_template('viewStatistics.html')
     
-@app.route('/viewQuestion')
+@app.route('/viewQuestion/<int:questionID>')
 def viewQuestion():
+    print "Made it to view question!"
+    
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+        #setup admin confirmation + parameters
+        
+        
+    else:
+        #setup student confirmation + parameters
+        return redirect(url_for('welcome'))
+    
     return render_template('viewQuestion.html')
+
+@app.route('/launchQuestion/<qType>/<int:questionID>/<int:classID>')
+def launchQuestion(qType,questionID,classID):
+    print questionID
+    print qType
+    print classID
+    print "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+questionID+","+classID+","+qType+")"
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+    
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    try:
+        query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+questionID+","+classID+","+qType+")"
+        print query1
+        cur.execute(query1)
+        print "complete-"
+        conn.commit()
+        print "complete!"
+    except:
+        errorMessage = "Error launching instance"
+        print "Error launching instance"
+    return render_template('viewQuestion.html')
+ 
     
 @app.route('/questionBank')
 def questionBank():
@@ -376,8 +432,50 @@ def questionBank():
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('welcome'))
+    
+    #Connect to the database.
+    session['username']
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    try:
+        query = "SELECT short_answer_q.question, short_answer_q.questionid FROM person, short_answer_q WHERE (person.username = '%s' AND short_answer_q.adminowner = person.personid)"
+        cur.execute(query % session['username'])
+        shortAnswerResult = cur.fetchall()
+        for index in range(0,len(shortAnswerResult)):
+            print shortAnswerResult[index][0]
+            if len(shortAnswerResult[index][0]) > 20:
+                shortAnswerResult[index][0] = shortAnswerResult[index][0][:17] + "..."
+    except:
+        errorMessage = "Error extracting short answer questions"
+        print "Error extracting short answer questions"
         
-    return render_template('questionBank.html')
+    try:
+        query = "SELECT multiple_choice_q.question, multiple_choice_q.questionid FROM person, multiple_choice_q WHERE (person.username = '%s' AND multiple_choice_q.adminowner = person.personid)"
+        cur.execute(query % session['username'])
+        multipleChoiceResult = cur.fetchall()
+        for index in range(0,len(multipleChoiceResult)):
+            print multipleChoiceResult[index][0]
+            if len(multipleChoiceResult[index][0]) > 20:
+               multipleChoiceResult[index][0] = multipleChoiceResult[index][0][:17] + "..."
+    except:
+        errorMessage = "Error extracting multiple questions"
+        print "Error extracting multiple questions"
+        
+    try:
+        query = "SELECT map_selection_q.question, map_selection_q.questionid FROM person, map_selection_q WHERE (person.username = '%s' AND map_selection_q.adminowner = person.personid)"
+        cur.execute(query % session['username'])
+        mapSelectionResult = cur.fetchall()
+        for index in range(0,len( mapSelectionResult)):
+            print  mapSelectionResult[index][0]
+            if len( mapSelectionResult[index][0]) > 20:
+                 mapSelectionResult[index][0] =  mapSelectionResult[index][0][:17] + "..."
+    except:
+        errorMessage = "Error extracting map selection questions"
+        print "Error extracting map selection questions"
+            
+    return render_template('questionBank.html', shortAnswerQuestions = shortAnswerResult, multipleSchoiceQuestions = multipleChoiceResult, mapSelectionQuestions = mapSelectionResult)
     
 @app.route('/closedQuestions')
 def closedQuestions():
@@ -391,4 +489,4 @@ def closedQuestions():
     
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8081)

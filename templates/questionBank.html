@@ -10,26 +10,40 @@
 	</div>
 </div>
 
-<!--
+
 <div id="wrapper">
 	<div id="featured-wrapper">
 		<h1>Saved Questions</h1>
 		<table>
-		<tr>
-		<td><p class = "inline-label">What is the first...</td>
-		<td><a class = "button" href="/viewQuestion">View</a></td>
-		<td><a class = "button" href="/viewQuestion">Launch</a></td>
-		<td><a class = "button" href="/insertLinkHere">Delete</a></td>
-		</tr>
-		<tr>
-		<td><p class = "inline-label">Where is the locat...</td>
-		<td><a class = "button" href="/viewQuestion">View</a></td>
-		<td><a class = "button" href="/viewQuestion">Launch</a></td>
-		<td><a class = "button" href="/insertLinkHere">Delete</a></td>
-		</tr>
+				{% for question in shortAnswerQuestions %}
+				{% set viewURL = "viewQuestion/SA/"+question[1]|string+"" %}
+				{% set launchURL = "launchQuestion/SA/"+question[1]|string+"/1" %}<!-- need to get class-->
+				{% set deleteURL = "deleteQuestion/SA/"+question[1]|string+"" %}
+					<tr>
+					<td><p class = "inline-label">{{question[0]}}</td>
+					<td><a class = "button" href={{viewURL}}>View</a></td>
+					<td><a class = "button" href={{launchURL}}>Launch</a></td>
+					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
+					</tr>
+				{% endfor %}
+
 		</table>
+		
+<!--				<table>
+				{% for question in multipleChoiceQuestions %}
+
+				{% endfor %}
+
+		</table>
+		
+				<table>
+				{% for question in mapSelectionQuestions %}
+
+				{% endfor %}
+
+		</table>-->
 	</div>
 </div>
--->
+
 
 {% endblock %}
