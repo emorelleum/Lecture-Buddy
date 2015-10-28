@@ -122,18 +122,52 @@ def homeAdmin():
     
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
+
+
+    openQs = []    
     try:
-        query = "SELECT short_answer_q.text, class.classname FROM person, class, short_answer_q, question_instance WHERE short_answer_q.questionid = question_instance.questionid AND class.classid = quesiton_instance.classid AND short_answer_q.adminowner = person.personid AND person.username = %s"
-        cur.execute(query % session['username'])
-        openQs = cur.fetchall()
+        query = "SELECT t1.question, t2.instanceid, t3.classname FROM (short_answer_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        # WHERE t4.username = \'"+session['username']+"\'
+        print(query)
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
     except:
-        errorMessage = "Error Gathering All Classes"
-        print "Error Gathering All Classes"
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classname FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        # WHERE t4.username = \'"+session['username']+"\'
+        print(query)
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classname FROM (map_selection_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        # WHERE t4.username = \'"+session['username']+"\'
+        print(query)
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
         
-    errorMessage = ""
+    for index in range(0,len(openQs)):
+        print openQs[index][0]
+        if len(openQs[index][0]) > 20:
+            openQs[index][0] = openQs[index][0][:17] + "..."
     
-    return render_template('homeAdmin.html')
+    openQs = list(reversed(openQs))
+    print openQs
+    
+    return render_template('homeAdmin.html', openQs = openQs)
     
 @app.route('/homeStudent', methods=['GET', 'POST'])
 def homeStudent():
@@ -378,29 +412,135 @@ def viewStatistics():
         return redirect(url_for('welcome'))
         
     return render_template('viewStatistics.html')
-    
-@app.route('/viewQuestion/<int:questionID>')
-def viewQuestion():
-    print "Made it to view question!"
-    
+
+
+@app.route('/viewInstance/<int:instanceID>/')
+def viewInstance(instanceID):
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
-        #setup admin confirmation + parameters
-        
-        
+        #setup admin confirmation + parameters security will have to be, well not HAVE ot, but would be good
     else:
         #setup student confirmation + parameters
         return redirect(url_for('welcome'))
     
-    return render_template('viewQuestion.html')
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    questionInfo = []
+    errorMessage = ""
+    try:
+        query1 = "SELECT questionid, questiontype FROM question_instance  WHERE  instanceid = " + str(instanceID)
+        cur.execute(query1)
+        questionInfo = cur.fetchone()
+        print "!!!!!!!!!"
+        print questionInfo
+    except:
+        errorMessage = "Error launching instance view"
+        print "Error launching instance view"
+    
+    answerInfo = []
+    questionID = questionInfo[0]
+    typeID = questionInfo[1]
+    errorMessage = ""
+    if typeID == "SA":
+        try:
+            query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"     
+            
+    if typeID == "MC":
+        try:
+            query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+            #query answer data
+            query2 = "SELECT choicetext FROM choices WHERE questionid = " + str(questionID)
+            print query2
+            cur.execute(query2)
+            answerInfo = cur.fetchall()
+            print "!!!!!!!!!!!" + str(answerInfo)
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"  
+            
+    if typeID == "MS":
+        try:
+            query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+            #parse answer
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"  
+    
+    return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = "", viewer = 'presenter')
+
+
+@app.route('/viewQuestion/<typeID>/<int:questionID>/<viewer>')        
+@app.route('/viewQuestion/<typeID>/<int:questionID>')
+def viewQuestion(questionID,typeID,viewer = 'creator'):#viewer can be 'creator' 'presenter' or 'student'
+    #viewtype is whether or not the answer should be displayed
+    
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+        #setup admin confirmation + parameters security will have to be, well not HAVE ot, but would be good
+    else:
+        #setup student confirmation + parameters
+        return redirect(url_for('welcome'))
+        
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    answerInfo = []
+    questionInfo = []
+    
+    errorMessage = ""
+    if typeID == "SA":
+        try:
+            query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"     
+            
+    if typeID == "MC":
+        try:
+            query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+            #query answer data
+            query2 = "SELECT choicetext FROM choices WHERE questionid = " + str(questionID)
+            print query2
+            cur.execute(query2)
+            answerInfo = cur.fetchall()
+            print "!!!!!!!!!!!" + str(answerInfo)
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"  
+            
+    if typeID == "MS":
+        try:
+            query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = " + str(questionID)
+            cur.execute(query1)
+            questionInfo = cur.fetchone()
+            #parse answer
+        except:
+            errorMessage = "Error viewing question"
+            print "Error viewing question"  
+    
+    return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = questionInfo[2], viewer = viewer)
 
 @app.route('/launchQuestion/<qType>/<int:questionID>/<int:classID>')
 def launchQuestion(qType,questionID,classID):
     print questionID
     print qType
     print classID
-    print "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+questionID+","+classID+","+qType+")"
+    print "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+str(questionID)+","+str(classID)+","+qType+")"
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
@@ -413,16 +553,14 @@ def launchQuestion(qType,questionID,classID):
     errorMessage = ""
     
     try:
-        query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+questionID+","+classID+","+qType+")"
-        print query1
+        query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+str(questionID)+","+str(classID)+",\'"+qType+"\')"
         cur.execute(query1)
-        print "complete-"
         conn.commit()
-        print "complete!"
     except:
         errorMessage = "Error launching instance"
         print "Error launching instance"
-    return render_template('viewQuestion.html')
+    #return render_template('viewQuestion.html',questionID,qType,viewer = 'presenter')
+    return viewQuestion(questionID,qType,viewer='presenter')
  
     
 @app.route('/questionBank')
@@ -475,7 +613,7 @@ def questionBank():
         errorMessage = "Error extracting map selection questions"
         print "Error extracting map selection questions"
             
-    return render_template('questionBank.html', shortAnswerQuestions = shortAnswerResult, multipleSchoiceQuestions = multipleChoiceResult, mapSelectionQuestions = mapSelectionResult)
+    return render_template('questionBank.html', shortAnswerQuestions = shortAnswerResult, multipleChoiceQuestions = multipleChoiceResult, mapSelectionQuestions = mapSelectionResult)
     
 @app.route('/closedQuestions')
 def closedQuestions():

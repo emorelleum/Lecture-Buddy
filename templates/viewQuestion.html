@@ -2,44 +2,48 @@
 
 {% block content %}
 
-
+{% if qType == "MC" %}
             <div id="wrapper">
             	<div id="featured-wrapper">
-            		<h1>View Question</h1>
-            		<p  class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-            		<p class = "inline-label">Choice: A (Your Answer)-Correct Answer
-            		<p class = "inline-label">Choice: B
-            		<p><a class = "button" href="/insertLinkHere">Return</a>
+            		<h1>View Multiple Choice Question</h1>
+            		<p  class = "question-text">{{questionText}}</p>
+            		{% set index = 0 %}
+            		{% for choice in choices %}
+            		{% set index = index + 1 %}
+            		<p class = "inline-label">{{choice[0]}} {% if index == correctAns|int %} (correct answer) {% endif %}
+            		{% endfor %}
+            		<p><a class = "button" href="/homeAdmin">Return</a>
             	
             	</div>
             </div>
             
-            <br>
-            <br>
+{% endif %}
+{% if qType == "SA" %}
             
             <div id="wrapper">
             	<div id="featured-wrapper">
-            		<h1>View Question</h1>
-            		<p class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-            		<p class = "inline-label">Your Answer: Answery
-            		<p class = "inline-label">Correct Answer: Answera, Answere, Answeri, Answero, or Answeru
+            		<h1>View Short Answer Question</h1>
+            		<p class = "question-text">{{questionText}}</p>
+            		<!--<p class = "inline-label">Your Answer: Answery-->
+            		{%if not correctAns == "" %}<p class = "inline-label">Correct Answer: {{correctAns}}{% endif %}
             		<span></span>
-            		<p><a class = "button" href="/insertLinkHere">Return</a>
+            		<p><a class = "button" href="/homeAdmin">Return</a>
             	</div>
             </div>
             
-            <br>
-            <br>
+{% endif %}
+{% if qType == "MS" %}
             
             <div id="wrapper">
             	<div id="featured-wrapper">
-            		<h1>View Question</h1>
-            		<p class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-            		<p><span><img alt="Question Image"></span></p>
+            		<h1>View Map Selection Question</h1>
+            		<p class = "question-text">{{questionText}}</p>
+            		<p><span><img alt="Image Not Available!"></span></p>
             		<p class = "inline-label"><span>Legend: (pending)</span>
-            		<p><a class = "button" href="/insertLinkHere">Return</a>
+            		<p><a class = "button" href="/homeAdmin">Return</a>
             	</div>
             </div>
 
+{% endif %}
 
 {% endblock %}
