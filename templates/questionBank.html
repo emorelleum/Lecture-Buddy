@@ -12,14 +12,32 @@
 		<table>
 			<h2>Short Answer Questions</h2>
 				{% for question in shortAnswerQuestions %}
-				{% set viewURL = "viewQuestion/SA/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/SA/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/SA/"+question[1]|string+"" %}
+				{% set questionID = question[1] %}
+				{% set classID = 1 %}
 					<tr>
 					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "SA">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="view" value="View"/>
+						</form>
+					</td>
+					<td>
+						<form action="/launchQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "SA">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input type = "hidden" name = "classID" value = 1>
+						<input class="button" type="submit" name="launch" value="Launch"/>
+						</form>
+					</td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "SA">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="delete" value="Delete"/>
+						</form>
+					</td>
 					</tr>
 				{% endfor %}
 
@@ -27,14 +45,33 @@
 			<h2>Multiple Choice Questions</h2>
 				<table>
 				{% for question in multipleChoiceQuestions %}
-				{% set viewURL = "viewQuestion/MC/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/MC/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/MC/"+question[1]|string+"" %}
+				{% set questionID = question[1] %}
+				{% set classID = 1 %}
+
 					<tr>
 					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MC">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="view" value="View"/>
+						</form>
+					</td>
+					<td>
+						<form action="/launchQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MC">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input type = "hidden" name = "classID" value = {{classID}}>
+						<input class="button" type="submit" name="launch" value="Launch"/>
+						</form>
+					</td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MC">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="delete" value="Delete"/>
+						</form>
+					</td>
 					</tr>
 					
 				{% endfor %}
@@ -43,14 +80,32 @@
 			<h2>Map Selection Questions</h2>
 				<table>
 				{% for question in mapSelectionQuestions %}
-				{% set viewURL = "viewQuestion/MS/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/MS/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/MS/"+question[1]|string+"" %}
+				{% set questionID = question[1] %}
+				{% set classID = 1 %}
 					<tr>
 					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MS">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="view" value="View"/>
+						</form>
+					</td>
+					<td>
+						<form action="/launchQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MS">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input type = "hidden" name = "classID" value = 1>
+						<input class="button" type="submit" name="launch" value="Launch"/>
+						</form>
+					</td>
+					<td>
+						<form action="/viewQuestion" method="POST">
+						<input type = "hidden" name = "questionType" value = "MS">
+						<input type = "hidden" name = "questionID" value = {{questionID}}>
+						<input class="button" type="submit" name="delete" value="Delete"/>
+						</form>
+					</td>
 					</tr>
 
 				{% endfor %}
