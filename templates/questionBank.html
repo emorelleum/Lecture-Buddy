@@ -2,62 +2,38 @@
 
 {% block content %}
 
+<script language="JavaScript" type="text/javascript">
+	
+	function shortAnswer(){
+		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Short Answer</h2></div>";
+	}
+	
+	function multipleChoice(){
+		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Multiple Choice</h2></div>";
+	}
+	
+	function map(){
+		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Map</h2></div>";
+	}
+	
+</script>
+
 <div id="wrapper">
 	<div id="featured-wrapper">
-		<div class="title">
-			<h2 style="float:centered">Question Bank</h2>
+		<div class="extra2 container">
+			<div class="title">
+				<h2>Question Bank</h2>
+				<span class="byline"><font color="red">{{error}}</font></span>
+			</div>
+			<input  class="button-sort" type="submit" onclick="shortAnswer()" name="shortAnswer" value="Short Answer"/>
+			<input  class="button-sort" type="submit" onclick="map()" name="Map" value="Map"/>
+			<input  class="button-sort" type="submit" onclick="multipleChoice()" name="multipleChoice" value="Multiple Choice"/>
 		</div>
-
-		<h1>Saved Questions</h1>
-		<table>
-			<h2>Short Answer Questions</h2>
-				{% for question in shortAnswerQuestions %}
-				{% set viewURL = "viewQuestion/SA/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/SA/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/SA/"+question[1]|string+"" %}
-					<tr>
-					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
-					</tr>
-				{% endfor %}
-
-		</table>
-			<h2>Multiple Choice Questions</h2>
-				<table>
-				{% for question in multipleChoiceQuestions %}
-				{% set viewURL = "viewQuestion/MC/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/MC/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/MC/"+question[1]|string+"" %}
-					<tr>
-					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
-					</tr>
-					
-				{% endfor %}
-
-		</table>
-			<h2>Map Selection Questions</h2>
-				<table>
-				{% for question in mapSelectionQuestions %}
-				{% set viewURL = "viewQuestion/MS/"+question[1]|string+"" %}
-				{% set launchURL = "launchQuestion/MS/"+question[1]|string+"/1" %}<!-- need to get class-->
-				{% set deleteURL = "deleteQuestion/MS/"+question[1]|string+"" %}
-					<tr>
-					<td><p class = "inline-label">{{question[0]}}</td>
-					<td><a class = "button" href={{viewURL}}>View</a></td>
-					<td><a class = "button" href={{launchURL}}>Launch</a></td>
-					<td><a class = "button" href={{deleteURL}}>Delete</a></td>
-					</tr>
-
-				{% endfor %}
-
-		</table>
+		
+		<div id="allQuestions" class="questions"> 
+		<!-- Fill With JavaScript -->
+		</div>
 	</div>
 </div>
-
 
 {% endblock %}

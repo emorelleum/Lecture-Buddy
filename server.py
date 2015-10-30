@@ -192,7 +192,7 @@ def homeStudent():
             result = cur.fetchone()
             personid = result[0]
             try:
-                query = "SELECT classid FROM person_class_join WHERE personid = %s"
+                query = "SELECT classid FROM person_class_join WHERE personid = '%s'"
                 cur.execute(query % personid)
                 results = cur.fetchall()
                 
@@ -415,8 +415,8 @@ def viewStatistics():
     return render_template('viewStatistics.html')
 
 
-@app.route('/viewInstance/<int:instanceID>/')
-def viewInstance(instanceID):
+@app.route('/viewInstance', methods=['GET', 'POST'])
+def viewInstance():
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
@@ -425,64 +425,65 @@ def viewInstance(instanceID):
         #setup student confirmation + parameters
         return redirect(url_for('welcome'))
     
-    conn = connectToDB()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    questionInfo = []
-    errorMessage = ""
-    try:
-        query1 = "SELECT questionid, questiontype FROM question_instance  WHERE  instanceid = " + str(instanceID)
-        cur.execute(query1)
-        questionInfo = cur.fetchone()
-        print "!!!!!!!!!"
-        print questionInfo
-    except:
-        errorMessage = "Error launching instance view"
-        print "Error launching instance view"
-    
-    answerInfo = []
-    questionID = questionInfo[0]
-    typeID = questionInfo[1]
-    errorMessage = ""
-    if typeID == "SA":
-        try:
-            query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"     
-            
-    if typeID == "MC":
-        try:
-            query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-            #query answer data
-            query2 = "SELECT choicetext FROM choices WHERE questionid = " + str(questionID)
-            print query2
-            cur.execute(query2)
-            answerInfo = cur.fetchall()
-            print "!!!!!!!!!!!" + str(answerInfo)
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"  
-            
-    if typeID == "MS":
-        try:
-            query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-            #parse answer
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"  
-    
-    return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = "", viewer = 'presenter')
+    if request.method == 'POST':
+        instanceID = request.form['instanceID']
 
+        conn = connectToDB()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        questionInfo = []
+        errorMessage = ""
+        try:
+            query1 = "SELECT questionid, questiontype FROM question_instance  WHERE  instanceid = %s"
+            cur.execute(query1, (instanceID,))
+            questionInfo = cur.fetchone()
+            print "!!!!!!!!!"
+            print questionInfo
+        except:
+            errorMessage = "Error launching instance view"
+            print "Error launching instance view"
+        
+        answerInfo = []
+        questionID = questionInfo[0]
+        typeID = questionInfo[1]
+        errorMessage = ""
+        if typeID == "SA":
+            try:
+                query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = %s" 
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"     
+                
+        if typeID == "MC":
+            try:
+                query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = %s"
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+                #query answer data
+                query2 = "SELECT choicetext FROM choices WHERE questionid = %s"
+                print query2
+                cur.execute(query2, (questionID,))
+                answerInfo = cur.fetchall()
+                print "!!!!!!!!!!!" + str(answerInfo)
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"  
+                
+        if typeID == "MS":
+            try:
+                query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = %s"
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+                #parse answer
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"  
+        
+    #return viewQuestion()
 
-@app.route('/viewQuestion/<typeID>/<int:questionID>/<viewer>')        
-@app.route('/viewQuestion/<typeID>/<int:questionID>')
-def viewQuestion(questionID,typeID,viewer = 'creator'):#viewer can be 'creator' 'presenter' or 'student'
+@app.route('/viewQuestion', methods=['GET', 'POST'])
+def viewQuestion():#viewer can be 'creator' 'presenter' or 'student'
     #viewtype is whether or not the answer should be displayed
     
     if 'admin' in session:
@@ -499,49 +500,50 @@ def viewQuestion(questionID,typeID,viewer = 'creator'):#viewer can be 'creator' 
     answerInfo = []
     questionInfo = []
     
-    errorMessage = ""
-    if typeID == "SA":
-        try:
-            query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"     
-            
-    if typeID == "MC":
-        try:
-            query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-            #query answer data
-            query2 = "SELECT choicetext FROM choices WHERE questionid = " + str(questionID)
-            print query2
-            cur.execute(query2)
-            answerInfo = cur.fetchall()
-            print "!!!!!!!!!!!" + str(answerInfo)
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"  
-            
-    if typeID == "MS":
-        try:
-            query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = " + str(questionID)
-            cur.execute(query1)
-            questionInfo = cur.fetchone()
-            #parse answer
-        except:
-            errorMessage = "Error viewing question"
-            print "Error viewing question"  
-    
-    return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = questionInfo[2], viewer = viewer)
+    if request.method == 'POST':
+        questionID = request.form['questionID'] 
+        typeID = request.form['questionType']
+        
+        errorMessage = ""
+        if typeID == "SA":
+            try:
+                query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = %s"
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"     
+                
+        if typeID == "MC":
+            try:
+                query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = %s"
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+                #query answer data
+                query2 = "SELECT choicetext FROM choices WHERE questionid = %s"
+                print query2
+                cur.execute(query2, (questionID,))
+                answerInfo = cur.fetchall()
+                print "!!!!!!!!!!!" + str(answerInfo)
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"  
+                
+        if typeID == "MS":
+            try:
+                query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = %s"
+                cur.execute(query1, (questionID,))
+                questionInfo = cur.fetchone()
+                #parse answer
+            except:
+                errorMessage = "Error viewing question"
+                print "Error viewing question"  
+        
+        return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = questionInfo[2], viewer = 'presenter')
 
-@app.route('/launchQuestion/<qType>/<int:questionID>/<int:classID>')
-def launchQuestion(qType,questionID,classID):
-    print questionID
-    print qType
-    print classID
-    print "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+str(questionID)+","+str(classID)+","+qType+")"
+@app.route('/launchQuestion', methods=['GET', 'POST'])
+def launchQuestion():
+   
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
@@ -552,17 +554,20 @@ def launchQuestion(qType,questionID,classID):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     errorMessage = ""
-    
-    try:
-        query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES ("+str(questionID)+","+str(classID)+",\'"+qType+"\')"
-        cur.execute(query1)
-        conn.commit()
-    except:
-        errorMessage = "Error launching instance"
-        print "Error launching instance"
-    #return render_template('viewQuestion.html',questionID,qType,viewer = 'presenter')
-    return viewQuestion(questionID,qType,viewer='presenter')
- 
+    if request.method == 'POST':
+        questionID = request.form['questionID']
+        qType = request.form['questionType']
+        classID = request.form['classID']
+        try:
+            query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES (%s,%s,%s)"
+            cur.execute(query1, (questionID,classID,qType))
+            conn.commit()
+        except:
+            errorMessage = "Error launching instance"
+            print "Error launching instance"
+        #return render_template('viewQuestion.html',questionID,qType,viewer = 'presenter')
+        return viewQuestion()
+     
     
 @app.route('/questionBank')
 def questionBank():

@@ -19,15 +19,28 @@
 			<table>
 			{% for question in openQs %}
 
-			{% set viewURL = "viewInstance/"+question[1]|string+"" %}
-			{% set closeURL = "closeQuestion/"+question[1]|string %}
-			{% set deleteURL = "deleteQuestion/"+question[1]|string+"" %}
-			</tr>
-			<td><p class = "inline-label">{{question[0]}}</td>
-			<td><a class = "button" href={{viewURL}}>View</a></td>
-			<td><a class = "button" href={{closeURL}}>Close</a></td>
-			<td><a class = "button" href={{deleteURL}}>Delete</a></td>
-			</tr>
+				{% set instanceID = question[1] %}
+					<tr>
+					<td><p class = "inline-label">{{question[0]}}</td>
+					<td>
+						<form action="/viewInstance" method="POST">
+						<input type = "hidden" name = "instanceID" value = {{instanceID}}>
+						<input class="button" type="submit" name="view" value="View"/>
+						</form>
+					</td>
+					<td>
+						<form action="/closeInstance" method="POST">
+						<input type = "hidden" name = "instanceID" value = {{instanceID}}>
+						<input class="button" type="submit" name="close" value="Close"/>
+						</form>
+					</td>
+					<td>
+						<form action="/deleteInstance" method="POST">
+						<input type = "hidden" name = "instanceID" value = {{instanceID}}>
+						<input class="button" type="submit" name="delete" value="Delete"/>
+						</form>
+					</td>
+					</tr>
 
 			{% endfor %}
 			</table>

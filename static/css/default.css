@@ -333,10 +333,10 @@ ul.contact li a.icon-rss:before
 	vertical-align: middle;
 	font-weight: 800;
 	color: #FFF;
-
 	border-radius: 5px;
 	border: 2px solid #3D3D3D; 
 }
+
 .button-class{
 	font-size: 1.5em;
 	height: .8em;
@@ -355,9 +355,10 @@ ul.contact li a.icon-rss:before
 	text-decoration: none;
 	text-align: center; 
 	vertical-align: middle;
-	font-weight: 550;
 	color: #FFF;	
 }
+
+
 
 /*********************************************************************************/
 /* Heading Titles                                                                */
@@ -1141,6 +1142,7 @@ ul.contact li a.icon-rss:before
 	text-align: center; 
 	vertical-align: middle;
 }
+
 table
 {
 	margin-left:auto;
@@ -1158,7 +1160,6 @@ table
 	visibility: hidden;
 	top: 65%;
 	left: 35%;
-
 }
 
 #joinClass{
@@ -1215,3 +1216,38 @@ table
 	vertical-align: middle;
 }
 
+.button-sort
+{
+	display: inline-block;
+	padding: .5em 1em;
+	background: #04B45F;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+	-o-transition: opacity 0.25s ease-in-out;
+	-ms-transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.25s ease-in-out;
+	letter-spacing: 0.20em;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #FFF;
+	text-align: center; 
+	vertical-align: middle;
+	width: 20em;
+	height: 5em;
+	font-size: 1.2em;
+	margin: .6em;
+}
+
+#questions{
+	width: 100%;
+	height: 250px; 
+	position: absolute; 
+	background: #000000;
+	border: 4px solid #000000; 
+	z-index: 9; 
+	font-family: arial; 
+	visibility: hidden;
+	top: 65%;
+	left: 35%;
+}
