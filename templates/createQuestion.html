@@ -82,7 +82,7 @@ var correctAnswer = "";
 					<span class="byline">Enter The Following Information</span></br>
 					<span class="byline"><font color="red">{{error}}</font></span>
 				</div>
-				<form action="/createQuestion" method="POST">
+				<form action="/createQuestion" method="POST" enctype="multipart/form-data">
 					<div class="form_settings">
 						<p><span>Question Type:</span>
             			<select name="questionType" size=1 onchange=choices(this)>

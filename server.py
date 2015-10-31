@@ -2,8 +2,10 @@ import psycopg2
 import psycopg2.extras
 import time
 import os
+import werkzeug
 
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect, send_from_directory
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24).encode('hex')
 
@@ -15,7 +17,7 @@ def connectToDB():
     return psycopg2.connect(connectionString)
   except:
     print("Can't connect to database")
-
+    
 @app.route('/')
 def mainIndex():
     return render_template('welcome.html')
@@ -56,6 +58,8 @@ def register():
                             query1 = "INSERT INTO person (firstname, lastname, admin, username, password) VALUES (%s, %s, %s, %s, crypt(%s, gen_salt('bf')))"
                             cur.execute(query1, (firstName, lastName, str(admin), username, password1))
                             conn.commit()
+                            if admin == 1:
+                                os.mkdir("static/pictures/" + username)
                             return redirect(url_for('login'))
                         except:
                             print("Error Registering")
@@ -240,9 +244,8 @@ def createQuestion():
     if request.method == 'POST':
         if 'questionType' in request.form:
             questionType = request.form['questionType']
-        if 'image' in request.form:
-            image = request.form['image']
-            imageName = request.form['image']
+        if 'image' in request.files:
+            image = request.files['image']
         if 'questionText' in request.form:
             questionText = request.form['questionText']
         if 'answer' in request.form:
@@ -264,8 +267,12 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO short_answer_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
-                    cur.execute(query, (questionText, imageName, adminCreator, answer))
+                    cur.execute(query, (questionText, str(adminCreator), adminCreator, answer))
                     conn.commit()
+
+                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                    writeToMe.write(image.read())   
+                    writeToMe.close()
                 except:
                     errorMessage = "Error Creating Short Answer Question"
                     print "Error Creating Short Answer Question"
@@ -610,6 +617,28 @@ def questionBank():
             
     return render_template('questionBank.html', error=errorMessage, shortAnswerQuestions=shortAnswerResults, multipleChoiceQuestions=multipleChoiceResults, mapSelectionQuestions=mapSelectionResults)
     
+@app.route('/deleteQuestion', methods=['GET', 'POST'])
+def deleteQuestion():
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    if request.method == 'POST':
+        questionID = request.form['questionID']
+        questionType = request.form['questionType']
+        
+        if questionType == "shortAnswer":
+            print questionType
+        
+        elif questionType == "multipleChoice":
+            print questionType
+        
+        elif questionType == "map":
+            print questionType
+        
+        return redirect(url_for('questionBank'))
+
+    return render_template('questionBank.html')
+
 @app.route('/closedQuestions')
 def closedQuestions():
     if 'admin' in session:

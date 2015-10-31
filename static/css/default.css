@@ -1239,15 +1239,15 @@ table
 	margin: .6em;
 }
 
-#questions{
-	width: 100%;
-	height: 250px; 
-	position: absolute; 
-	background: #000000;
+#allQuestions{
+	margin: 0 auto;
+	width: 92%;
+	height: 400px; 
+	background: #FFFFFF;
 	border: 4px solid #000000; 
 	z-index: 9; 
-	font-family: arial; 
-	visibility: hidden;
-	top: 65%;
-	left: 35%;
+	overflow:auto;
+	font-size: 150%;
+	font-family: "Times New Roman";
+	color: #000000;
 }

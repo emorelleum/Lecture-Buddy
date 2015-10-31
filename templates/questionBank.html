@@ -1,19 +1,35 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
-
+<body onload="shortAnswer({{shortAnswerQuestions}})">
+	
 <script language="JavaScript" type="text/javascript">
-	
-	function shortAnswer(){
-		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Short Answer</h2></div>";
+
+	function shortAnswer(shortAnswerQuestions){
+		document.getElementById('name').innerHTML = "<div class='title'><h2>Short Answer</h2></div>";
+		document.getElementById('allQuestions').innerHTML = "";
+		
+		for(var i = 0; i < shortAnswerQuestions.length; i++){
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + shortAnswerQuestions[i][1] + "'>" + (i + 1) + ". " + shortAnswerQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+		}
 	}
 	
-	function multipleChoice(){
-		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Multiple Choice</h2></div>";
+	function multipleChoice(multipleChoiceQuestions){
+		document.getElementById('name').innerHTML = "<div class='title'><h2>Multiple Choice</h2></div>";
+		document.getElementById('allQuestions').innerHTML = "";
+		
+		for(var i = 0; i < multipleChoiceQuestions.length; i++){
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + multipleChoiceQuestions[i][1] + "'>" + (i + 1) + ". " + multipleChoiceQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+		}
 	}
 	
-	function map(){
-		document.getElementById('allQuestions').innerHTML = "<div class='title'><h2>Map</h2></div>";
+	function map(mapSelectionQuestions){
+		document.getElementById('name').innerHTML = "<div class='title'><h2>Map</h2></div>";
+		document.getElementById('allQuestions').innerHTML = "";
+		
+		for(var i = 0; i < mapSelectionQuestions.length; i++){
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + mapSelectionQuestions[i][1] + "'>" + (i + 1) + ". " + mapSelectionQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+		}
 	}
 	
 </script>
@@ -25,13 +41,15 @@
 				<h2>Question Bank</h2>
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
-			<input  class="button-sort" type="submit" onclick="shortAnswer()" name="shortAnswer" value="Short Answer"/>
-			<input  class="button-sort" type="submit" onclick="map()" name="Map" value="Map"/>
-			<input  class="button-sort" type="submit" onclick="multipleChoice()" name="multipleChoice" value="Multiple Choice"/>
-		</div>
-		
-		<div id="allQuestions" class="questions"> 
-		<!-- Fill With JavaScript -->
+			<input  class="button-sort" type="submit" onclick="shortAnswer({{shortAnswerQuestions}})" name="shortAnswer" value="Short Answer"/>
+			<input  class="button-sort" type="submit" onclick="map({{mapSelectionQuestions}})" name="Map" value="Map"/>
+			<input  class="button-sort" type="submit" onclick="multipleChoice({{multipleChoiceQuestions}})" name="multipleChoice" value="Multiple Choice"/>
+			<div id="name">
+				<!-- Fill With JavaScript -->
+			</div>
+			<div id="allQuestions"> 
+			<!-- Fill With JavaScript -->
+			</div>
 		</div>
 	</div>
 </div>
