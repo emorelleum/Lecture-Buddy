@@ -267,7 +267,7 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO short_answer_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
-                    cur.execute(query, (questionText, str(adminCreator), adminCreator, answer))
+                    cur.execute(query, (questionText, image.filename, adminCreator, answer))
                     conn.commit()
 
                     writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
@@ -281,8 +281,12 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO map_selection_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
-                    cur.execute(query, (questionText, image, adminCreator, answer))
+                    cur.execute(query, (questionText, image.filename, adminCreator, answer))
                     conn.commit()
+                    
+                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                    writeToMe.write(image.read())   
+                    writeToMe.close()
                 except:
                     errorMessage = "Error Creating Map Question"
                     print "Error Creating Map Question"
@@ -291,8 +295,12 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO multiple_choice_q (question, image, adminowner) VALUES (%s, %s, %s)"
-                    cur.execute(query, (questionText, imageName, adminCreator))
+                    cur.execute(query, (questionText, image.filename, adminCreator))
                     conn.commit()
+                    
+                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                    writeToMe.write(image.read())   
+                    writeToMe.close()
                     try:
                         query = "SELECT questionid FROM multiple_choice_q WHERE question = '%s'"
                         cur.execute(query % questionText)
