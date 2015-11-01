@@ -5,31 +5,41 @@
 	
 <script language="JavaScript" type="text/javascript">
 
+	var type = ""
+
 	function shortAnswer(shortAnswerQuestions){
 		document.getElementById('name').innerHTML = "<div class='title'><h2>Short Answer</h2></div>";
 		document.getElementById('allQuestions').innerHTML = "";
-		
+		type = "shortAnswer";
 		for(var i = 0; i < shortAnswerQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + shortAnswerQuestions[i][1] + "'>" + (i + 1) + ". " + shortAnswerQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + shortAnswerQuestions[i][1] + "'>" + (i + 1) + ". " + shortAnswerQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+shortAnswerQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
 	}
 	
 	function multipleChoice(multipleChoiceQuestions){
 		document.getElementById('name').innerHTML = "<div class='title'><h2>Multiple Choice</h2></div>";
 		document.getElementById('allQuestions').innerHTML = "";
-		
+		type = "multipleChoice";
 		for(var i = 0; i < multipleChoiceQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + multipleChoiceQuestions[i][1] + "'>" + (i + 1) + ". " + multipleChoiceQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + multipleChoiceQuestions[i][1] + "'>" + (i + 1) + ". " + multipleChoiceQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+multipleChoiceQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
 	}
 	
 	function map(mapSelectionQuestions){
 		document.getElementById('name').innerHTML = "<div class='title'><h2>Map</h2></div>";
 		document.getElementById('allQuestions').innerHTML = "";
-		
+		type = "map";
 		for(var i = 0; i < mapSelectionQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + mapSelectionQuestions[i][1] + "'>" + (i + 1) + ". " + mapSelectionQuestions[i][1].substring(0,100) + "</a><form style='align:right; display:inline' action='/launchQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + mapSelectionQuestions[i][1] + "'>" + (i + 1) + ". " + mapSelectionQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass(" + mapSelectionQuestions[i][0] +")' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
+	}
+	
+	function showChooseClass(questionID){
+			document.getElementById('joinClass').style.visibility="visible";
+			document.getElementById('classes').innerHTML += "<input type='hidden' name='questionType' value='"+type+"'><input type='hidden' name='questionID' value='"+questionID+"'>"
+	}
+	function hideChooseClass(){
+			document.getElementById('joinClass').style.visibility="hidden";
 	}
 	
 </script>
@@ -52,6 +62,26 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div id="joinClass"> 
+	<center>
+	<div class="title">
+		<h2 style="display: inline; margin-left:60px">Choose Class</h2>
+		<input class="closeButton" type="submit"  name="exit" value="X" onclick="hideChooseClass()"/></br>
+		<span class="byline">Choose A Class</span>
+		<form action="/launchQuestion" method="POST">
+			<div id=classes class="form_settings">
+				<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1>
+					{% for class in classes %}
+						<option value='{{class}}'>{{class}}</option>
+					{% endfor %}
+				</select></p>
+			</div>
+			<input class="button" type="submit"  name="launchQuestion" value="Launch Question"/>
+		</form>
+	</div>
+	</center>
 </div>
 
 {% endblock %}

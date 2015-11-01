@@ -2,7 +2,7 @@ import psycopg2
 import psycopg2.extras
 import time
 import os
-import werkzeug
+import datetime
 
 from flask import Flask, render_template, request, session, url_for, redirect, send_from_directory
 
@@ -124,6 +124,7 @@ def homeAdmin():
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('welcome'))
+        
     
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -234,7 +235,6 @@ def createQuestion():
     #Instantiate Variables
     errorMessage = ""
     questionType = ""
-    imageName = ""
     questionText = ""
     answer = ""
     choices = []
@@ -269,10 +269,11 @@ def createQuestion():
                     query = "INSERT INTO short_answer_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
                     cur.execute(query, (questionText, image.filename, adminCreator, answer))
                     conn.commit()
-
-                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
-                    writeToMe.write(image.read())   
-                    writeToMe.close()
+                    
+                    if image:
+                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe.write(image.read())   
+                        writeToMe.close()
                 except:
                     errorMessage = "Error Creating Short Answer Question"
                     print "Error Creating Short Answer Question"
@@ -284,9 +285,10 @@ def createQuestion():
                     cur.execute(query, (questionText, image.filename, adminCreator, answer))
                     conn.commit()
                     
-                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
-                    writeToMe.write(image.read())   
-                    writeToMe.close()
+                    if image:
+                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe.write(image.read())   
+                        writeToMe.close()
                 except:
                     errorMessage = "Error Creating Map Question"
                     print "Error Creating Map Question"
@@ -298,9 +300,11 @@ def createQuestion():
                     cur.execute(query, (questionText, image.filename, adminCreator))
                     conn.commit()
                     
-                    writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
-                    writeToMe.write(image.read())   
-                    writeToMe.close()
+                    if image:
+                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe.write(image.read())   
+                        writeToMe.close()
+                        
                     try:
                         query = "SELECT questionid FROM multiple_choice_q WHERE question = '%s'"
                         cur.execute(query % questionText)
@@ -374,6 +378,8 @@ def createClass():
         except:
             errorMessage = "Error Checking For Class Name and Section"
             print "Error Checking For Class Name and Section"
+            
+        return redirect(url_for('homeAdmin'))
         
     return render_template('homeAdmin.html', error = errorMessage)    
 
@@ -412,6 +418,8 @@ def joinClass():
         except:
             errorMessage = "Error Joining New Class"
             print "Error Getting Personid"
+            
+        return redirect(url_for('homeStudent'))
         
     return render_template('homeStudent.html', error = errorMessage)  
 
@@ -558,7 +566,6 @@ def viewQuestion():#viewer can be 'creator' 'presenter' or 'student'
 
 @app.route('/launchQuestion', methods=['GET', 'POST'])
 def launchQuestion():
-   
     if 'admin' in session:
         if not session['admin']:
             return redirect(url_for('welcome'))
@@ -571,19 +578,30 @@ def launchQuestion():
     errorMessage = ""
     if request.method == 'POST':
         questionID = request.form['questionID']
-        qType = request.form['questionType']
-        classID = request.form['classID']
+        questionType = request.form['questionType']
+        className = request.form['availableClasses']
+        name = className.rsplit(' ', 1)[0]
+        section = className.rsplit(' ', 1)[1]
+        date = str(datetime.date.today())
+
         try:
-            query1 = "INSERT INTO question_instance (questionid, classid, questiontype) VALUES (%s,%s,%s)"
-            cur.execute(query1, (questionID,classID,qType))
-            conn.commit()
+            query = "SELECT classid FROM class WHERE classname = %s AND section = %s"
+            cur.execute(query, (name, section))
+            results = cur.fetchone()
+            classid = results[0]
+            try:
+                query1 = "INSERT INTO question_instance (questionid, classid, questiontype, date) VALUES (%s, %s, %s, %s)"
+                cur.execute(query1, (questionID, classid, questionType, date))
+                conn.commit()
+            except:
+                errorMessage = "Error launching instance"
+                print "Error launching instance"
         except:
-            errorMessage = "Error launching instance"
-            print "Error launching instance"
-        #return render_template('viewQuestion.html',questionID,qType,viewer = 'presenter')
-        return viewQuestion()
+            errorMessage = "Error Getting Classid"
+            print "Error Getting Classid"
+            
+    return redirect(url_for('questionBank'))
      
-    
 @app.route('/questionBank')
 def questionBank():
     if 'admin' in session:
@@ -622,30 +640,91 @@ def questionBank():
     except:
         errorMessage = "Error Extracting Short Answer Questions"
         print "Error Extracting Short Answer Questions"
+        
+    displayClasses = []
+    personClasses = []
+    
+    try:
+        query = "SELECT classid, classname, section FROM class"
+        cur.execute(query)
+        classes = cur.fetchall()
+        try:
+            query = "SELECT personid FROM person WHERE username = '%s'"
+            cur.execute(query % session['username'])
+            result = cur.fetchone()
+            personid = result[0]
+            try:
+                query = "SELECT classid FROM person_class_join WHERE personid = '%s'"
+                cur.execute(query % personid)
+                results = cur.fetchall()
+                
+                for item in results:
+                    personClasses.append(item[0])
+                for item2 in classes:
+                    if item2[0] not in personClasses:
+                        temp = "" + str(item2[1]) + " " + str(item2[2])
+                        displayClasses.append(temp)
+            except:
+                errorMessage = "Error Getting Person's Classes"
+                print "Error Getting Person's Classes" 
+        except:
+            errorMessage = "Error Getting Personid"
+            print "Error Getting Personid" 
+    except:
+        errorMessage = "Error Gathering All Classes"
+        print "Error Gathering All Classes"
             
-    return render_template('questionBank.html', error=errorMessage, shortAnswerQuestions=shortAnswerResults, multipleChoiceQuestions=multipleChoiceResults, mapSelectionQuestions=mapSelectionResults)
+    return render_template('questionBank.html', error=errorMessage, shortAnswerQuestions=shortAnswerResults, multipleChoiceQuestions=multipleChoiceResults, mapSelectionQuestions=mapSelectionResults, classes = displayClasses)
     
 @app.route('/deleteQuestion', methods=['GET', 'POST'])
 def deleteQuestion():
+    #We need to delete instances too.
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
     
     if request.method == 'POST':
         questionID = request.form['questionID']
         questionType = request.form['questionType']
         
         if questionType == "shortAnswer":
-            print questionType
+            try:
+                query = "DELETE FROM short_answer_q WHERE questionid = '%s'"
+                cur.execute(query % questionID)
+                conn.commit()
+            except:
+                errorMessage = "Error Deleting Short Answer Question"
+                print "Error Deleting Short Answer Question"
         
         elif questionType == "multipleChoice":
-            print questionType
+            try:
+                query = "DELETE FROM multiple_choice_q WHERE questionid = '%s'"
+                cur.execute(query % questionID)
+                conn.commit()
+                try:
+                    query = "DELETE FROM choices WHERE questionid = '%s'"
+                    cur.execute(query % questionID)
+                    conn.commit()
+                except:
+                    errorMessage = "Error Deleting Multiple Choice Choices"
+                    print "Error Deleting Multiple Choice Choices"
+            except:
+                errorMessage = "Error Deleting Multiple Choice Question"
+                print "Error Deleting Multiple Choice Question"
         
         elif questionType == "map":
-            print questionType
+            try:
+                query = "DELETE FROM map_selection_q WHERE questionid = '%s'"
+                cur.execute(query % questionID)
+                conn.commit()
+            except:
+                errorMessage = "Error Deleting Map Selection Question"
+                print "Error Deleting Map Selection Question"
         
         return redirect(url_for('questionBank'))
 
-    return render_template('questionBank.html')
+    return render_template('questionBank.html', error=errorMessage)
 
 @app.route('/closedQuestions')
 def closedQuestions():
