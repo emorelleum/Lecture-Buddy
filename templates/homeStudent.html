@@ -2,7 +2,11 @@
 
 {% block content %}
 
+<body onload="setQuestions({{openQs}})">
+
 <script language="JavaScript" type="text/javascript">
+
+	var questions = []
 
 	function showJoinClass(){
 			document.getElementById('joinClass').style.visibility="visible";
@@ -11,12 +15,39 @@
 			document.getElementById('joinClass').style.visibility="hidden";
 	}
 	
+	function showInstances(classInfo){
+		document.getElementById('name').innerHTML = "<div class='title'><h2>" + classInfo[1] + "</h2></div>";
+		document.getElementById('allQuestions').innerHTML = "";
+		for(var i = 0; i < questions.length; i++){
+			if(questions[i][2] == classInfo[0]){
+				document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + questions[i][0] + "'>" + (i + 1) + ". " + questions[i][0].substring(0,100) + "</a><form style='align:right; display:inline' action='/questionResponse' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Respond'></form></p>";
+			}
+		}
+	}
+	
+	function setQuestions(openQs){
+		questions = openQs;
+	}
+	
 </script>
+
 <div id="wrapper">
 	<div id="featured-wrapper">
 		<div class="title">
 			<h2 style="float:centered">Home</h2>
+			<span class="byline"><font color="red">{{error}}</font></span>
 			<input style="float:right" class="classButton" type="submit" onclick="showJoinClass()" name="joinClass" value="Join Class"/>
+		</div>
+		<div style="height:150px; width:92%; overflow-x:scroll ; overflow-y: hidden; margin: 0 auto; white-space: nowrap;">
+		{% for class in activeClasses %}
+			<input  class="button-sort" type="submit" onclick="showInstances({{class}})" name='{{class[1]}}' value='{{class[1]}}'/>
+		{% endfor %}
+		</div>
+		<div id="name">
+			<!-- Fill With JavaScript -->
+		</div>
+		<div id="allQuestions"> 
+		<!-- Fill With JavaScript -->
 		</div>
 	</div>
 </div>
