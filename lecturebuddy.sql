@@ -83,7 +83,8 @@ ALTER SEQUENCE choices_choiceid_seq OWNED BY choices.choiceid;
 
 CREATE TABLE class (
     classid integer NOT NULL,
-    classname character varying(100) NOT NULL
+    classname character varying(100) NOT NULL,
+    section integer
 );
 
 
@@ -267,7 +268,8 @@ CREATE TABLE question_instance (
     questionid integer NOT NULL,
     classid integer,
     questiontype character varying(100),
-    date character varying(50)
+    date character varying(50),
+    open boolean DEFAULT true
 );
 
 
@@ -411,7 +413,7 @@ SELECT pg_catalog.setval('choices_choiceid_seq', 1, false);
 -- Data for Name: class; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY class (classid, classname) FROM stdin;
+COPY class (classid, classname, section) FROM stdin;
 \.
 
 
@@ -495,7 +497,7 @@ SELECT pg_catalog.setval('person_personid_seq', 1, false);
 -- Data for Name: question_instance; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY question_instance (instanceid, questionid, classid, questiontype, date) FROM stdin;
+COPY question_instance (instanceid, questionid, classid, questiontype, date, open) FROM stdin;
 \.
 
 
@@ -503,7 +505,7 @@ COPY question_instance (instanceid, questionid, classid, questiontype, date) FRO
 -- Name: question_instance_instanceid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('question_instance_instanceid_seq', 1, false);
+SELECT pg_catalog.setval('question_instance_instanceid_seq', 15, true);
 
 
 --
