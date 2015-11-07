@@ -157,7 +157,7 @@ def homeAdmin():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -166,7 +166,7 @@ def homeAdmin():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -175,7 +175,7 @@ def homeAdmin():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -227,7 +227,7 @@ def homeStudent():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -236,7 +236,7 @@ def homeStudent():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -245,7 +245,7 @@ def homeStudent():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON t1.questionid = t2.questionid INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -790,6 +790,49 @@ def deleteInstance():
         return redirect(url_for('homeAdmin'))
 
     return render_template('homeAdmin.html', error=errorMessage)
+    
+@app.route('/closeInstance', methods=['GET', 'POST'])
+def closeInstance():
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        instanceID = request.form['instanceID']
+        try:
+            query = "UPDATE question_instance SET open = 'f' WHERE instanceid = '%s'"
+            cur.execute(query % instanceID)
+            conn.commit()
+        except:
+            errorMessage = "Error Closing Question Instance"
+            print "Error Closing Question Instance"
+            
+        return redirect(url_for('homeAdmin'))
+
+    return render_template('homeAdmin.html', error=errorMessage)
+
+@app.route('/openInstance', methods=['GET', 'POST'])
+def openInstance():
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        instanceID = request.form['instanceID']
+        try:
+            query = "UPDATE question_instance SET open = 't' WHERE instanceid = '%s'"
+            cur.execute(query % instanceID)
+            conn.commit()
+        except:
+            errorMessage = "Error Opening Question Instance"
+            print "Error Opening Question Instance"
+            
+        return redirect(url_for('closedQuestions'))
+
+    return render_template('closedQuestions.html', error=errorMessage)
+
 
 @app.route('/closedQuestions')
 def closedQuestions():
@@ -798,8 +841,68 @@ def closedQuestions():
             return redirect(url_for('welcome'))
     else:
         return redirect(url_for('welcome'))
+
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    errorMessage = ""
+    openQs = [] 
+    displayClasses = []
+    personClasses = []
+    
+    try:
+        query = "SELECT classid, classname, section FROM class"
+        cur.execute(query)
+        classes = cur.fetchall()
+        try:
+            query = "SELECT classid FROM person_class_join WHERE personid = '%s'"
+            cur.execute(query % session['personid'])
+            results = cur.fetchall()
+            
+            for item in results:
+                personClasses.append(item[0])
+            for item2 in classes:
+                if item2[0] in personClasses:
+                    temp = "" + str(item2[1]) + " " + str(item2[2])
+                    temp2 = [item2[0], temp]
+                    displayClasses.append(temp2)
+        except:
+            errorMessage = "Error Getting Person's Classes"
+            print "Error Getting Person's Classes" 
+    except:
+        errorMessage = "Error Gathering All Classes"
+        print "Error Gathering All Classes"
         
-    return render_template('closedQuestions.html')
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+
+    return render_template('closedQuestions.html', openQs = openQs, classes=displayClasses)
+    
     
 if __name__ == '__main__':
     app.debug=True
