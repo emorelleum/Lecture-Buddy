@@ -911,7 +911,7 @@ def closedQuestions():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f' AND questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -920,7 +920,7 @@ def closedQuestions():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f' AND questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -929,7 +929,7 @@ def closedQuestions():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 'f' AND questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
