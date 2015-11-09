@@ -12,7 +12,7 @@
 		document.getElementById('allQuestions').innerHTML = "";
 		type = "shortAnswer";
 		for(var i = 0; i < shortAnswerQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + shortAnswerQuestions[i][1] + "'>" + (i + 1) + ". " + shortAnswerQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+shortAnswerQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer' onclick='viewQuestion("+ shortAnswerQuestions[i][0] +")' title='" + shortAnswerQuestions[i][1] + "'>" + (i + 1) + ". " + shortAnswerQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+shortAnswerQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='shortAnswer'><input type='hidden' name='questionID' value='" + shortAnswerQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
 	}
 	
@@ -21,7 +21,7 @@
 		document.getElementById('allQuestions').innerHTML = "";
 		type = "multipleChoice";
 		for(var i = 0; i < multipleChoiceQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + multipleChoiceQuestions[i][1] + "'>" + (i + 1) + ". " + multipleChoiceQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+multipleChoiceQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer' onclick='viewQuestion("+ multipleChoiceQuestions[i][0] +")' title='" + multipleChoiceQuestions[i][1] + "'>" + (i + 1) + ". " + multipleChoiceQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass("+multipleChoiceQuestions[i][0]+")' value='Launch'><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='multipleChoice'><input type='hidden' name='questionID' value='" + multipleChoiceQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
 	}
 	
@@ -30,7 +30,7 @@
 		document.getElementById('allQuestions').innerHTML = "";
 		type = "map";
 		for(var i = 0; i < mapSelectionQuestions.length; i++){
-			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + mapSelectionQuestions[i][1] + "'>" + (i + 1) + ". " + mapSelectionQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass(" + mapSelectionQuestions[i][0] +")' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+			document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer' onclick='viewQuestion("+ mapSelectionQuestions[i][0] +")' title='" + mapSelectionQuestions[i][1] + "'>" + (i + 1) + ". " + mapSelectionQuestions[i][1].substring(0,100) + "</a><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' onclick='showChooseClass(" + mapSelectionQuestions[i][0] +")' value='Launch'></form><form style='align:right; display:inline' action='/deleteQuestion' method='POST'><input type='hidden' name='questionType' value='map'><input type='hidden' name='questionID' value='" + mapSelectionQuestions[i][0] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 		}
 	}
 	
@@ -40,6 +40,11 @@
 	}
 	function hideChooseClass(){
 			document.getElementById('joinClass').style.visibility="hidden";
+	}
+	
+	function viewQuestion(questionid){
+		document.getElementById('link').innerHTML = "<form id='submitThis' style='align:right; display:inline' action='/viewQuestion' method='POST'><input type='hidden' name='questionType' value='"+ type +"'><input type='hidden' name='questionID' value='" + questionid + "'></form>"
+		document.getElementById('submitThis').submit();
 	}
 	
 </script>
@@ -82,6 +87,10 @@
 		</form>
 	</div>
 	</center>
+</div>
+
+<div id="link" style='visibility:hidden'>
+	
 </div>
 
 {% endblock %}

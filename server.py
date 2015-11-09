@@ -157,7 +157,7 @@ def homeAdmin():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -166,7 +166,7 @@ def homeAdmin():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -175,7 +175,7 @@ def homeAdmin():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -183,7 +183,7 @@ def homeAdmin():
     except:
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
-
+        
     return render_template('homeAdmin.html', openQs = openQs, classes=displayClasses)
     
 @app.route('/homeStudent', methods=['GET', 'POST'])
@@ -227,7 +227,7 @@ def homeStudent():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -236,7 +236,7 @@ def homeStudent():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -245,7 +245,7 @@ def homeStudent():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_q t1 INNER JOIN question_instance t2 ON (t1.questionid = t2.questionid AND t2.open = 't' AND questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
         cur.execute(query)
         elements = cur.fetchall()
         for element in elements:
@@ -491,129 +491,166 @@ def viewStatistics():
 
 @app.route('/viewInstance', methods=['GET', 'POST'])
 def viewInstance():
-    if 'admin' in session:
-        if not session['admin']:
-            return redirect(url_for('welcome'))
-        #setup admin confirmation + parameters security will have to be, well not HAVE ot, but would be good
-    else:
-        #setup student confirmation + parameters
-        return redirect(url_for('welcome'))
-    
-    if request.method == 'POST':
-        instanceID = request.form['instanceID']
-
-        conn = connectToDB()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        questionInfo = []
-        errorMessage = ""
-        try:
-            query1 = "SELECT questionid, questiontype FROM question_instance  WHERE  instanceid = %s"
-            cur.execute(query1, (instanceID,))
-            questionInfo = cur.fetchone()
-            print "!!!!!!!!!"
-            print questionInfo
-        except:
-            errorMessage = "Error launching instance view"
-            print "Error launching instance view"
-        
-        answerInfo = []
-        questionID = questionInfo[0]
-        typeID = questionInfo[1]
-        errorMessage = ""
-        if typeID == "SA":
-            try:
-                query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = %s" 
-                cur.execute(query1, (questionID,))
-                questionInfo = cur.fetchone()
-            except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"     
-                
-        if typeID == "MC":
-            try:
-                query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = %s"
-                cur.execute(query1, (questionID,))
-                questionInfo = cur.fetchone()
-                #query answer data
-                query2 = "SELECT choicetext FROM choices WHERE questionid = %s"
-                print query2
-                cur.execute(query2, (questionID,))
-                answerInfo = cur.fetchall()
-                print "!!!!!!!!!!!" + str(answerInfo)
-            except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"  
-                
-        if typeID == "MS":
-            try:
-                query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = %s"
-                cur.execute(query1, (questionID,))
-                questionInfo = cur.fetchone()
-                #parse answer
-            except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"  
-        
-    #return viewQuestion()
-
-@app.route('/viewQuestion', methods=['GET', 'POST'])
-def viewQuestion():#viewer can be 'creator' 'presenter' or 'student'
-    #viewtype is whether or not the answer should be displayed
-    
-    if 'admin' in session:
-        if not session['admin']:
-            return redirect(url_for('welcome'))
-        #setup admin confirmation + parameters security will have to be, well not HAVE ot, but would be good
-    else:
-        #setup student confirmation + parameters
+    if 'admin' not in session:
         return redirect(url_for('welcome'))
         
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    answerInfo = []
+    questionType = ""
+    answerInfo = ""
+    choiceInfo = []
     questionInfo = []
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        instanceID = request.form['instanceID']
+        try:
+            query1 = "SELECT questionid, questiontype FROM question_instance WHERE instanceid = '%s'"
+            cur.execute(query1 % instanceID)
+            instanceInfo = cur.fetchone()
+            questionID = instanceInfo[0]
+            typeID = instanceInfo[1]
+            if typeID == "shortAnswer":
+                try:
+                    questionType = "Short Answer"
+                    query1 = "SELECT question, image, answer, adminowner FROM short_answer_q WHERE questionid = '%s'"
+                    cur.execute(query1 % questionID)
+                    questionInfo = cur.fetchone()
+                    try:
+                        query5 = "SELECT username FROM person WHERE personid = '%s'"
+                        cur.execute(query5 % questionInfo[3])
+                        creator = cur.fetchone()[0]
+                    except:
+                        errorMessage = "Error Getting Question Creator"
+                        print "Error Getting Question Creator"
+                except:
+                    errorMessage = "Error Getting Short Answer Question"
+                    print "Error Getting Short Answer Question"     
+                    
+            if typeID == "multipleChoice":
+                try:
+                    questionType = "Multiple Choice"
+                    query1 = "SELECT question, image, answerid, adminowner FROM multiple_choice_q WHERE questionid = '%s'"
+                    cur.execute(query1 % questionID)
+                    questionInfo = cur.fetchone()
+                    try:
+                        query2 = "SELECT choicetext, choiceid FROM choices WHERE questionid = '%s'"
+                        cur.execute(query2 % questionID)
+                        choiceInfo = cur.fetchall()
+                        try:
+                            query3 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
+                            cur.execute(query3 % questionInfo[2])
+                            answerInfo = cur.fetchone()[0]
+                            try:
+                                query5 = "SELECT username FROM person WHERE personid = '%s'"
+                                cur.execute(query5 % questionInfo[3])
+                                creator = cur.fetchone()[0]
+                            except:
+                                errorMessage = "Error Getting Question Creator"
+                                print "Error Getting Question Creator"
+                        except:
+                            errorMessage = "Error Getting Answer"
+                            print "Error Getting Answer" 
+                    except:
+                        errorMessage = "Error Getting Choices"
+                        print "Error Getting Choices"  
+                except:
+                    errorMessage = "Error Getting Multiple Choice Question"
+                    print "Error Getting Multiple Choice Question"  
+                    
+            if typeID == "map":
+                try:
+                    questionType = "Map"
+                    query1 = "SELECT question, image, answer, adminowner FROM map_selection_q WHERE questionid = '%s'"
+                    cur.execute(query1 % questionID)
+                    questionInfo = cur.fetchone()
+                    try:
+                        query5 = "SELECT username FROM person WHERE personid = '%s'"
+                        cur.execute(query5 % questionInfo[3])
+                        creator = cur.fetchone()[0]
+                    except:
+                        errorMessage = "Error Getting Question Creator"
+                        print "Error Getting Question Creator"
+                except:
+                    errorMessage = "Error Getting Map Question"
+                    print "Error Getting map Question"  
+        except:
+            errorMessage = "Error Getting QuestionId"
+            print "Error Getting QuestionID"
+            
+    if not session['admin']:
+        return render_template('questionResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage)
+    else:
+        return render_template('viewInstance.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage)
+
+@app.route('/viewQuestion', methods=['GET', 'POST'])
+def viewQuestion():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    questionType = ""
+    answerInfo = ""
+    choiceInfo = []
+    questionInfo = []
+    errorMessage = ""
+    
     
     if request.method == 'POST':
         questionID = request.form['questionID'] 
         typeID = request.form['questionType']
         
-        errorMessage = ""
-        if typeID == "SA":
+        if typeID == "shortAnswer":
             try:
-                query1 = "SELECT question, image, answer FROM short_answer_q  WHERE  questionid = %s"
-                cur.execute(query1, (questionID,))
+                questionType = "Short Answer"
+                query1 = "SELECT question, image, answer FROM short_answer_q WHERE questionid = '%s'"
+                cur.execute(query1 % questionID)
                 questionInfo = cur.fetchone()
             except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"     
+                errorMessage = "Error Getting Short Answer Question"
+                print "Error Getting Short Answer Question"     
                 
-        if typeID == "MC":
+        if typeID == "multipleChoice":
             try:
-                query1 = "SELECT question, image, answerid FROM multiple_choice_q  WHERE  questionid = %s"
-                cur.execute(query1, (questionID,))
+                questionType = "Multiple Choice"
+                query1 = "SELECT question, image, answerid FROM multiple_choice_q WHERE questionid = '%s'"
+                cur.execute(query1 % questionID)
                 questionInfo = cur.fetchone()
-                #query answer data
-                query2 = "SELECT choicetext FROM choices WHERE questionid = %s"
-                print query2
-                cur.execute(query2, (questionID,))
-                answerInfo = cur.fetchall()
-                print "!!!!!!!!!!!" + str(answerInfo)
+                try:
+                    query2 = "SELECT choicetext FROM choices WHERE questionid = '%s'"
+                    cur.execute(query2 % questionID)
+                    choiceInfo = cur.fetchall()
+                    try:
+                        query3 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
+                        cur.execute(query3 % questionInfo[2])
+                        answerInfo = cur.fetchone()[0]
+                    except:
+                        errorMessage = "Error Getting Answer"
+                        print "Error Getting Answer" 
+                except:
+                    errorMessage = "Error Getting Choices"
+                    print "Error Getting Choices"  
             except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"  
+                errorMessage = "Error Getting Multiple Choice Question"
+                print "Error Getting Multiple Choice Question"  
                 
-        if typeID == "MS":
+        if typeID == "map":
             try:
-                query1 = "SELECT question, image, answer FROM map_selection_q  WHERE  questionid = %s"
-                cur.execute(query1, (questionID,))
+                questionType = "Map"
+                query1 = "SELECT question, image, answer FROM map_selection_q WHERE questionid = '%s'"
+                cur.execute(query1 % questionID)
                 questionInfo = cur.fetchone()
-                #parse answer
             except:
-                errorMessage = "Error viewing question"
-                print "Error viewing question"  
+                errorMessage = "Error Getting Map Question"
+                print "Error Getting map Question"  
         
-        return render_template('viewQuestion.html', qType = typeID, questionText = questionInfo[0], choices = answerInfo, imagePath = questionInfo[1], correctAns = questionInfo[2], viewer = 'presenter')
+    return render_template('viewQuestion.html', question=questionInfo, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage)
 
 @app.route('/launchQuestion', methods=['GET', 'POST'])
 def launchQuestion():

@@ -20,13 +20,18 @@
 		document.getElementById('allQuestions').innerHTML = "";
 		for(var i = 0; i < questions.length; i++){
 			if(questions[i][2] == classInfo[0]){
-				document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left' title='" + questions[i][0] + "'>" + (i + 1) + ". " + questions[i][0].substring(0,100) + "</a><form style='align:right; display:inline' action='/closeInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Close'></form><form style='align:right; display:inline' action='/deleteInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
+				document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer' onclick='viewInstance("+ questions[i][1] +")' title='" + questions[i][0] + "'>" + (i + 1) + ". " + questions[i][0].substring(0,100) + "</a><form style='align:right; display:inline' action='/closeInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Close'></form><form style='align:right; display:inline' action='/deleteInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Delete'></form></p>";
 			}
 		}
 	}
 	
 	function setQuestions(openQs){
 		questions = openQs;
+	}
+	
+	function viewInstance(instanceid){
+		document.getElementById('link').innerHTML = "<form id='submitThis' style='align:right; display:inline' action='/viewInstance' method='POST'><input type='hidden' name='instanceID' value='" + instanceid + "'></form>"
+		document.getElementById('submitThis').submit();
 	}
 	
 </script>
@@ -67,5 +72,9 @@
 		</form>
 	</div>
 	</center>
+</div>
+
+<div id="link" style='visibility:hidden'>
+	
 </div>
 {% endblock %}
