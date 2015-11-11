@@ -19,6 +19,7 @@
 				<h1 align=left style="align:left">Question:</h1></br>
 				<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[0]}}</p>
 				<form action="/questionResponse" method="POST">
+					<input type='hidden' name='instanceID' value={{instanceID}}>
 					{% if questionType == "Multiple Choice" %}
 						<h1 align=left style="align:left">Choices:</h1></br>
 						{% set counter = 1 %}
