@@ -12,7 +12,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=1QAZ3edc host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -580,7 +580,7 @@ def viewInstance():
             print "Error Getting QuestionID"
             
     if not session['admin']:
-        return render_template('questionResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage)
+        return render_template('questionResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage,instanceID=instanceID)
     else:
         return render_template('viewInstance.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage)
 
@@ -939,8 +939,57 @@ def closedQuestions():
         print "Error Gathering Open Questions"
 
     return render_template('closedQuestions.html', openQs = openQs, classes=displayClasses)
+
+@app.route('/questionResponse', methods=['GET', 'POST'])
+def registerResponse():
+    print "In question Response"
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        instanceID = request.form['instanceID']
+        print "got instance id"
+        try:
+            query = "SELECT questiontype FROM question_instance WHERE instanceid = %s"
+            cur.execute(query, (instanceID,))
+            typeID = cur.fetchone()
+            print instanceID
+            print typeID[0]
+            try:
+                query = "error"
+                if typeID[0] == 'shortAnswer':
+                    query = "INSERT INTO short_answer_ans (response,userid,instanceid) VALUES (%s,%s,%s)"
+                    args = (request.form["response"],session["personid"],instanceID)
+                elif typeID[0] == 'multipleChoice':
+                    query = "INSERT INTO multiple_choice_ans (userid,instanceid,choiceid) VALUES (%s,%s,%s)"
+                    args = (session["personid"],instanceID,request.form["option"])
+                elif typeID[0] == 'mapSelection':
+                    query = "INSERT INTO map_selection_ans (userid,instanceid,xco,yco) VALUES (%s,%s,%s,%s)"
+                    args = (session["personid"],instanceID,request.form["xco"],request.form["yco"])
+                else:
+                    errorMessage = "Could not find question"
+                    print "Could not find question"
+                    return render_template('homeStudent.html', error=errorMessage) 
+                print args
+                cur.execute(query, args)
+                print "query executed"
+                conn.commit()
+            except:
+                errorMessage = "Error submitting response"
+                print "Error submitting response"
+                
+            
+        except:
+            errorMessage = "Error determining question type"
+            print "Error determining question type"
+            
+        return render_template('homeStudent.html', error=errorMessage)    
+        
+    return render_template('homeStudent.html', error=errorMessage)
     
     
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8081)
