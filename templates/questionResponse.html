@@ -11,9 +11,44 @@
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
 			<!-- If it is a map question we will have to make the image a canvas and record the mouse click. -->
-				{% if question[1] != "" %}
+				{% if questionType == "Map" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
-					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
+					<canvas id="canvas" width=600px height=350px style="border: 3px solid #3D3D3D"></canvas>
+
+					<script type="text/javascript">
+						var canvas = document.getElementById('canvas');
+						var context = canvas.getContext('2d');
+						
+						createImage();
+						
+						function createImage(){
+							var imageObj = new Image();
+							imageObj.src = "{{location}}";
+						
+							imageObj.onload = function() {
+								context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, canvas.width, canvas.height);
+							};
+						}
+
+						canvas.addEventListener("mousedown", getPosition, false);
+
+						function getPosition(event)
+						{
+							var canvas = document.getElementById("canvas");
+							var rect = canvas.getBoundingClientRect();
+							var context = canvas.getContext('2d');
+						  	var x = Math.floor(event.clientX - rect.left);
+						  	var y = Math.floor(event.clientY - rect.top);
+						  	context.fillStyle = "#FFFFFF";
+    						context.fillRect(x, y, 2, 2);
+    						document.getElementById('coordinates').value = "(" + x + ", " + y + ")";
+						}
+					</script>
+				{% else %}
+					{% if question[1] != "" %}
+						{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
+						<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
+					{% endif %}
 				{% endif %}
 				
 				<h1 align=left style="align:left">Question:</h1></br>
@@ -31,6 +66,10 @@
 					{% if questionType == "Short Answer" %}
 						<h1 align=left style="align:left">Response:</h1>
 						<p><textarea style="resize:none; width:100%; font: 100% arial; border: 1px solid #000000; background: #D1D0CE; color: #47433F;" rows=10 name="response" required></textarea></p>
+					{% endif %}
+					
+					{% if questionType == "Multiple Choice" %}
+						<input id="coordinates" type='hidden' name='mapCoordinates' value=''>
 					{% endif %}
 
 					<input class="button" type="submit" name="submit" value="Submit"/>
