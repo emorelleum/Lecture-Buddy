@@ -474,10 +474,6 @@ def joinClass():
         
     return render_template('homeStudent.html', error = errorMessage)  
 
-@app.route('/previousQuestions')
-def previousQuestions():
-    return render_template('previousQuestions.html')
-    
 @app.route('/viewStatistics')
 def viewStatistics():
     if 'admin' in session:
@@ -870,7 +866,6 @@ def openInstance():
 
     return render_template('closedQuestions.html', error=errorMessage)
 
-
 @app.route('/closedQuestions')
 def closedQuestions():
     if 'admin' in session:
@@ -950,7 +945,16 @@ def questionResponse():
     if request.method == 'POST':
         instanceID = request.form['instanceID']
         questionType = request.form['questionType']
+        
         if questionType == "Short Answer":
+            try:
+                queryDel = "DELETE FROM short_answer_ans WHERE userid = %s AND instanceid = %s"
+                cur.execute(queryDel, (session['personid'], instanceID))
+                conn.commit()
+            except:
+                errorMessage = "Error Deleting Question Response"
+                print "Error Deleting Question Response"
+                
             response = request.form['response']
             try:
                 query = "INSERT INTO short_answer_ans (userid, instanceid, response) VALUES (%s, %s, %s)"
@@ -961,6 +965,14 @@ def questionResponse():
                 print "Error Responding To Short Answer Question"
                 
         elif questionType == 'Multiple Choice':
+            try:
+                queryDel = "DELETE FROM multiple_choice_ans WHERE userid = %s AND instanceid = %s"
+                cur.execute(queryDel, (session['personid'], instanceID))
+                conn.commit()
+            except:
+                errorMessage = "Error Deleting Question Response"
+                print "Error Deleting Question Response"
+                
             choiceID = request.form['option']
             try:
                 query = "INSERT INTO multiple_choice_ans (userid, instanceid, choiceid) VALUES (%s, %s, %s)"
@@ -971,6 +983,14 @@ def questionResponse():
                 print "Error Responding To Multiple Choice Question"
                 
         elif questionType == 'Map':
+            try:
+                queryDel = "DELETE FROM map_selection_ans WHERE userid = %s AND instanceid = %s"
+                cur.execute(queryDel, (session['personid'], instanceID))
+                conn.commit()
+            except:
+                errorMessage = "Error Deleting Question Response"
+                print "Error Deleting Question Response"
+                
             xCoordinate = request.form['xCoordinate']
             yCoordinate = request.form['yCoordinate']
             try:
@@ -983,6 +1003,71 @@ def questionResponse():
         
     return redirect(url_for('previousQuestions'))
     
+@app.route('/previousQuestions')
+def previousQuestions():
+
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    errorMessage = ""
+    openQs = [] 
+    displayClasses = []
+    personClasses = []
+    
+    try:
+        query = "SELECT classid, classname, section FROM class"
+        cur.execute(query)
+        classes = cur.fetchall()
+        try:
+            query = "SELECT classid FROM person_class_join WHERE personid = '%s'"
+            cur.execute(query % session['personid'])
+            results = cur.fetchall()
+            
+            for item in results:
+                personClasses.append(item[0])
+            for item2 in classes:
+                if item2[0] in personClasses:
+                    temp = "" + str(item2[1]) + " " + str(item2[2])
+                    temp2 = [item2[0], temp]
+                    displayClasses.append(temp2)
+        except:
+            errorMessage = "Error Getting Person's Classes"
+            print "Error Getting Person's Classes" 
+    except:
+        errorMessage = "Error Gathering All Classes"
+        print "Error Gathering All Classes"
+        
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN short_answer_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN multiple_choice_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+    try:
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN map_selection_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
+        cur.execute(query)
+        elements = cur.fetchall()
+        for element in elements:
+            openQs.append(element)
+    except:
+        errorMessage = "Error Gathering Open Questions"
+        print "Error Gathering Open Questions"
+
+    return render_template('previousQuestions.html', openQs = openQs, classes=displayClasses)
+
+
     
 if __name__ == '__main__':
     app.debug=True
