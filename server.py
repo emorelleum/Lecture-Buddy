@@ -1085,6 +1085,7 @@ def viewResponse():
     choiceInfo = []
     questionInfo = []
     errorMessage = ""
+    response = ""
     
     if request.method == 'POST':
         instanceID = request.form['instanceID']
@@ -1139,11 +1140,11 @@ def viewResponse():
                                 try:
                                     query1 = "SELECT choiceid FROM multiple_choice_ans WHERE userid = %s AND instanceid = %s"
                                     cur.execute(query1, (session['personid'], instanceID))
-                                    response = cur.fetchone()[0]
+                                    responseAnswer = cur.fetchone()[0]
                                     try:
                                         query6 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
-                                        cur.execute(query6 % response)
-                                        answerResponse = cur.fetchone()[0]
+                                        cur.execute(query6 % responseAnswer)
+                                        response = cur.fetchone()[0]
                                     except:
                                         errorMessage = "Error Getting Multiple Choice Answer Response"
                                         print "Error Getting Multiple Choice Answer Response"
@@ -1176,7 +1177,8 @@ def viewResponse():
                         try:
                             query1 = "SELECT xco, yco FROM map_selection_ans WHERE userid = %s AND instanceid = %s"
                             cur.execute(query1, (session['personid'], instanceID))
-                            response = cur.fetchone()
+                            response1 = cur.fetchone()
+                            response = "(" + str(response1[0]) + ", " + str(response1[1]) + ")"
                         except:
                             errorMessage = "Error Getting Map Response"
                             print "Error Getting Map Response"
@@ -1190,8 +1192,8 @@ def viewResponse():
             errorMessage = "Error Getting QuestionId"
             print "Error Getting QuestionID"
             
-        return render_template('viewResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, answerResponse=answerResponse, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=instanceID, response=response)
-    
+        return render_template('viewResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=instanceID, response=response)
+
 if __name__ == '__main__':
     app.debug=True
     app.run(host='0.0.0.0', port=8080)
