@@ -12,7 +12,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=1QAZ3edc host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -983,7 +983,60 @@ def questionResponse():
         
     return redirect(url_for('previousQuestions'))
     
+
+@app.route('/getStatistics', methods=['GET', 'POST'])
+def getStatistics():
+    #instanceID = request.form['instanceID']
+    #questionType = request.form['typeID']
+    
+    instanceID = 1
+    questionType = "Multiple Choice"
+    questionInfo = ("Test Quesiton","12")
+    
+    
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    errorMessage = ""
+    
+    if request.method == 'POST':
+        
+        choices = []
+
+        if questionType == "Short Answer":
+            try:
+                query = "SELECT response FROM short_answer_ans WHERE instanceid = %s"
+                cur.execute(query, (instanceID,))
+                results = cur.fetchall()
+            except:
+                errorMessage = "Error Fetching Question Stats"
+                print "Error Fetching Question Stats"
+                
+        elif questionType == 'Multiple Choice':
+            choiceID = request.form['option']
+            try:
+                query = "SELECT t1.choiceid, t2.choicetext FROM multiple_choice_ans t1 INNER JOIN choices t2 ON t1.choiceid = t2.choiceid WHERE instanceid = %s"
+                cur.execute(query, (instanceID,))
+                results = cur.fetchall()
+                choices = ("Choicey","Choicer","Choicest","Choico")
+                results = (22,33,44,55)
+            except:
+                errorMessage = "Error Fetching Question Stats"
+                print "Error Fetching Question Stats"
+                
+        elif questionType == 'Map':
+            try:
+                query = "SELECT xco, yco FROM map_selection_ans WHERE instanceid = %s"
+                cur.execute(query, (instanceID,))
+                results = cur.fetchall()
+            except:
+                errorMessage = "Error Fetching Question Stats"
+                print "Error Fetching Question Stats"
+        print results
+        #return render_template('viewStatistics.html', questionType = questionType, error = errorMessage, choices = choices, question = questionInfo, results = results)
+    
+    return redirect(url_for('closedQuestions'))
     
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8081)
