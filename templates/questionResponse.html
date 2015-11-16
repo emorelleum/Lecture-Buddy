@@ -13,6 +13,7 @@
 			<!-- If it is a map question we will have to make the image a canvas and record the mouse click. -->
 				{% if questionType == "Map" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
+					{% set pin = "../static/pin.png" %}
 					<canvas id="canvas" width=600px height=350px style="border: 3px solid #3D3D3D"></canvas>
 
 					<script type="text/javascript">
@@ -37,10 +38,16 @@
 							var canvas = document.getElementById("canvas");
 							var rect = canvas.getBoundingClientRect();
 							var context = canvas.getContext('2d');
+							context.clearRect(0, 0, canvas.width, canvas.height);
+							var imageObj = new Image();
+							imageObj.src = "{{location}}";
+							context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, canvas.width, canvas.height);
 						  	var x = Math.floor(event.clientX - rect.left);
 						  	var y = Math.floor(event.clientY - rect.top);
 						  	context.fillStyle = "#FFFFFF";
-    						context.fillRect(x, y, 2, 2);
+						  	var pin = new Image();
+							pin.src = "{{pin}}";
+							context.drawImage(pin, x - 9, y - 24, 14, 24);
     						document.getElementById('xCoordinate').value = x;
     						document.getElementById('yCoordinate').value = y;
     						document.getElementById('check').value = "True";
