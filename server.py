@@ -1030,7 +1030,7 @@ def previousQuestions():
     openQs = [] 
     displayClasses = []
     personClasses = []
-    
+
     try:
         query = "SELECT classid, classname, section FROM class"
         cur.execute(query)
