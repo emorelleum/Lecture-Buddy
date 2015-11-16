@@ -9,17 +9,20 @@ var correctAnswer = "";
 	function choices(select){
 		var selectedOption = select.options[select.selectedIndex];
         if (selectedOption.value == "multipleChoice"){
+        	document.getElementById('check2').innerHTML = "<input id='check' type='text' name='check' value='' style='visibility: hidden' required>";
         	document.getElementById('addchoices').style.visibility="visible";
         	document.getElementById('choices').style.visibility="visible";
         	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*'>";
         }
         else if (selectedOption.value == "shortAnswer"){
+        	document.getElementById('check2').innerHTML = "";
         	document.getElementById('addchoices').style.visibility="hidden";
         	document.getElementById('choices').style.visibility="hidden";
         	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*'>";
         }
         else if (selectedOption.value == "map"){
-        	document.getElementById('addchoices').style.visibility="hidden";
+        	document.getElementById('check2').innerHTML = "";
+			document.getElementById('addchoices').style.visibility="hidden";
         	document.getElementById('choices').style.visibility="hidden";
         	document.getElementById('imageField').innerHTML = "<span>Upload Image:</span><input type='file' name='image' accept='image/*' required>";
         }
@@ -45,6 +48,13 @@ var correctAnswer = "";
 	function writeChoices(){
 		document.getElementById('allOptions').innerHTML = "</br>";
 		document.getElementById('createForm').innerHTML = "</br><input type='hidden' id='correctAnswer' name='correctAnswer' value='" + correctAnswer +"'>";
+		if(window.options.length > 1){
+			document.getElementById('check').value = "True";
+		}
+		else{
+			document.getElementById('check').value = "";
+		}
+		
 		for (var i = 0; i < window.options.length; i++){
 			if(correctAnswer == ""){
 				correctAnswer = window.options[i];
@@ -96,8 +106,12 @@ var correctAnswer = "";
 						<div id="createForm" style='visibility: hidden'>
 							
 						</div>
+						
 					</div>
-					<input class="button" type="submit" name="createQuestion" value="Create Question"/>
+					<input class="button" type="submit" name="createQuestion" value="Create Question"/></br>
+					<div id="check2" style="visibility: hidden">
+						
+					</div>
 				</form>
 			</div>		
 		</div>	

@@ -12,7 +12,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=password host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -291,6 +291,16 @@ def createQuestion():
             choices = request.form.getlist('hiddenChoice')
         if 'correctAnswer' in request.form:
             correctMultipleChoiceAnswer = request.form['correctAnswer']
+            
+        imageName = image.filename
+        imageName2 = imageName
+        counter = 1
+        
+        while (os.path.isfile("static/pictures/"+session['username']+"/" + imageName)):
+            imageName = imageName2 + str(counter)
+            imageName2 = image.filename
+            image.filename = imageName
+            counter += 1
             
         #Grab the adminID in order to insert the question into the database.
         try:
