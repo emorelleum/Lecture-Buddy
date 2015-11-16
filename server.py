@@ -276,6 +276,7 @@ def createQuestion():
     answer = ""
     choices = []
     correctMultipleChoiceAnswer = ""
+    finalImageName = ""
     
     #If the user is attempting to create a question.
     if request.method == 'POST':
@@ -292,6 +293,17 @@ def createQuestion():
         if 'correctAnswer' in request.form:
             correctMultipleChoiceAnswer = request.form['correctAnswer']
             
+        imageName = image.filename
+        finalImageName = imageName
+        imageName2 = imageName
+        counter = 1
+        
+        while (os.path.isfile("static/pictures/"+session['username']+"/" + imageName)):
+            imageName = imageName2 + str(counter)
+            imageName2 = image.filename
+            finalImageName = imageName
+            counter += 1
+            
         #Grab the adminID in order to insert the question into the database.
         try:
             query1 = "SELECT personid FROM person WHERE username = '%s'"
@@ -304,11 +316,11 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO short_answer_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
-                    cur.execute(query, (questionText, image.filename, adminCreator, answer))
+                    cur.execute(query, (questionText, finalImageName, adminCreator, answer))
                     conn.commit()
                     
                     if image:
-                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe = open("static/pictures/"+session['username']+"/" + finalImageName, "wb+")
                         writeToMe.write(image.read())   
                         writeToMe.close()
                 except:
@@ -319,11 +331,11 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO map_selection_q (question, image, adminowner, answer) VALUES (%s, %s, %s, %s)"
-                    cur.execute(query, (questionText, image.filename, adminCreator, answer))
+                    cur.execute(query, (questionText, finalImageName, adminCreator, answer))
                     conn.commit()
                     
                     if image:
-                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe = open("static/pictures/"+session['username']+"/" + finalImageName, "wb+")
                         writeToMe.write(image.read())   
                         writeToMe.close()
                 except:
@@ -334,11 +346,11 @@ def createQuestion():
                 try:
                     #Insert Person Information
                     query = "INSERT INTO multiple_choice_q (question, image, adminowner) VALUES (%s, %s, %s)"
-                    cur.execute(query, (questionText, image.filename, adminCreator))
+                    cur.execute(query, (questionText, finalImageName, adminCreator))
                     conn.commit()
                     
                     if image:
-                        writeToMe = open("static/pictures/"+session['username']+"/" + image.filename, "wb+")
+                        writeToMe = open("static/pictures/"+session['username']+"/" + finalImageName, "wb+")
                         writeToMe.write(image.read())   
                         writeToMe.close()
                         
@@ -1228,7 +1240,7 @@ def previousQuestions():
     openQs = [] 
     displayClasses = []
     personClasses = []
-    
+
     try:
         query = "SELECT classid, classname, section FROM class"
         cur.execute(query)

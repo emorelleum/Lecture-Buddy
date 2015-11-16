@@ -1,86 +1,50 @@
-{% extends "layoutAdmin.html" %}
+{% extends "layoutStudent.html" %}
 
 {% block content %}
 
-<!--Teacher views--><!--
-				<div id="wrapper">
-					<div id="featured-wrapper">
-						<h1>Statistics</h1>
-						<p class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-						<p class = "inline-label"><span>Choice: A</span>
-						<p class = "inline-label"><span>Choice: B</span>
-						<p class = "inline-label"><span>Choice: C</span>
-						<p class = "inline-label"><span>Choice: D</span>
-						<p><img alt="Graph Image">
-						<p><a class = "button" href="/insertLinkHere">Return</a>
-					
-					</div>
-				</div>
+<body onload="barChart()">
+<script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/Chart.js/Chart.min.js') }}"></script>
+<script language="JavaScript" type="text/javascript">
+	function barChart(){
+		// bar chart data
+		var barData = {
+		labels : ["January","February","March","April","May","June"],
+		datasets : [
+			{
+				fillColor : "#48A497",
+				strokeColor : "#48A4D1",
+				data : [456,479,324,569,702,600]
+			},
+			{
+				fillColor : "rgba(73,188,170,0.4)",
+				strokeColor : "rgba(72,174,209,0.4)",
+				data : [364,504,605,400,345,320]
+			}
+			]
+		}
+		
+		// get bar chart canvas
+		var income = document.getElementById("income").getContext("2d");
+		
+		// draw bar chart
+		var newChart = new Chart(income).Bar(barData);
+	}
 				
-				<br>
-				<br>
-				
-				<div id="wrapper">
-					<div id="featured-wrapper">
-						<h1>Statistics</h1>
-						<p class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-						<p class = "inline-label">Assorted Answers: Answera, Answert, Answeru, Answery
-						<p class = "inline-label">Correct Answer: Answera, Answere, Answeri, Answero, or Answeru
-						<span></span>
-						<p><a class = "button" href="/insertLinkHere">Return</a>
-					</div>
-				</div>
-				
-				<br>
-				<br>
-				
-				<div id="wrapper">
-					<div id="featured-wrapper">
-						<h1>Statistics</h1>
-						<p class = "question-text">What is the answer to this question that is made unecissarily long to comment on the ability of word wrap in th GUI for reasons of demonstration to show that we hopefully have good things in the works and do not mind about run-on sentences?</p>
-						<p><span><img alt="Question Image"></span></p>
-						<p class = "inline-label"><span>Legend: (pending)</span>
-						<p><a class = "button" href="/insertLinkHere">Return</a>
-					</div>
-				</div>
-				-->
+</script>
+
 <div id="wrapper">
 	<div id="featured-wrapper">
 		<div class="extra2 container">
 			<div class="ebox1">
 			<div class="title">
-				<h2>{{questionType}}</h2>
-				<span class="byline"><font color="red">{{error}}</font></span>
+
 			</div>
-				{% if question[1] != "" %}
-					{% set location = "../static/pictures/" + session['username'] + "/" + question[1] + "" %}
-					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
-				{% endif %}
+			<canvas id="income" width="600" height="400">
 				
-				<h1 align=left style="align:left">Question:</h1></br>
-				<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[0]}}</p>
-				
-				{% if choices %}
-				
-					<h1 align=left style="align:left">Choices:</h1></br>
-					{% set counter = 1 %}
-					{% for choice in choices %}
-						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin:.1em; margin-left:20px">{{counter}}. {{choice[0]}}</p>
-						{% set counter = counter + 1 %}
-					{% endfor %}
-				{% endif %}
-				
-				{% if question[2] != "" %}
-					<h1 align=left style="align:left">Answer:</h1></br>
-					{% if answerMC != "" %}
-						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{answerMC}}</p>
-					{% else %}
-						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[2]}}</p>
-					{% endif %}
-				{% endif %}
+			</canvas>
+
 			</div>
 		</div>
 	</div>
 </div>
-
 {% endblock %}
