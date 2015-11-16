@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<!--Teacher views-->
+<!--Teacher views--><!--
 				<div id="wrapper">
 					<div id="featured-wrapper">
 						<h1>Statistics</h1>
@@ -43,7 +43,44 @@
 						<p><a class = "button" href="/insertLinkHere">Return</a>
 					</div>
 				</div>
+				-->
+<div id="wrapper">
+	<div id="featured-wrapper">
+		<div class="extra2 container">
+			<div class="ebox1">
+			<div class="title">
+				<h2>{{questionType}}</h2>
+				<span class="byline"><font color="red">{{error}}</font></span>
+			</div>
+				{% if question[1] != "" %}
+					{% set location = "../static/pictures/" + session['username'] + "/" + question[1] + "" %}
+					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
+				{% endif %}
 				
-
+				<h1 align=left style="align:left">Question:</h1></br>
+				<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[0]}}</p>
+				
+				{% if choices %}
+				
+					<h1 align=left style="align:left">Choices:</h1></br>
+					{% set counter = 1 %}
+					{% for choice in choices %}
+						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin:.1em; margin-left:20px">{{counter}}. {{choice[0]}}</p>
+						{% set counter = counter + 1 %}
+					{% endfor %}
+				{% endif %}
+				
+				{% if question[2] != "" %}
+					<h1 align=left style="align:left">Answer:</h1></br>
+					{% if answerMC != "" %}
+						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{answerMC}}</p>
+					{% else %}
+						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[2]}}</p>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
