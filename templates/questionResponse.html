@@ -43,6 +43,7 @@
     						context.fillRect(x, y, 2, 2);
     						document.getElementById('xCoordinate').value = x;
     						document.getElementById('yCoordinate').value = y;
+    						document.getElementById('check').value = "True";
 						}
 					</script>
 				{% else %}
@@ -72,11 +73,14 @@
 					{% endif %}
 					
 					{% if questionType == "Map" %}
-						<input id="xCoordinate" type='hidden' name='xCoordinate' value='' required>
-						<input id="yCoordinate" type='hidden' name='yCoordinate' value='' required>
+						<input id="xCoordinate" type='hidden' name='xCoordinate' value=''>
+						<input id="yCoordinate" type='hidden' name='yCoordinate' value=''>
 					{% endif %}
 
 					<input class="button" type="submit" name="submit" value="Submit"/>
+					<div id="check2" style="visibility: hidden">
+						<input id='check' type='text' name='check' value='' style='visibility: hidden' required>
+					</div>
 				</form>
 			</div>
 		</div>
