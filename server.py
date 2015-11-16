@@ -12,7 +12,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=1QAZ3edc host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -842,163 +842,18 @@ def closeInstance():
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     errorMessage = ""
-    typeID = ""
+    
     if request.method == 'POST':
         instanceID = request.form['instanceID']
         try:
-            
             query = "UPDATE question_instance SET open = 'f' WHERE instanceid = '%s'"
             cur.execute(query % instanceID)
             conn.commit()
         except:
             errorMessage = "Error Closing Question Instance"
             print "Error Closing Question Instance"
-
-        choices = []
-        results = []
-        #questionType = "Multiple Choice"
-        #questionInfo = ("Test Quesiton","12")
-        try:
-            query1 = "SELECT questionid, questiontype FROM question_instance WHERE instanceid = '%s'"
-            cur.execute(query1 % instanceID)
-            instanceInfo = cur.fetchone()
-            questionID = instanceInfo[0]
-            typeID = instanceInfo[1]
-            if typeID == "shortAnswer":
-                try:
-                    questionType = "Short Answer"
-                    query1 = "SELECT question, image, answer, adminowner FROM short_answer_q WHERE questionid = '%s'"
-                    cur.execute(query1 % questionID)
-                    questionInfo = cur.fetchone()
-                    try:
-                        query1 = "SELECT response FROM short_answer_ans WHERE userid = %s AND instanceid = %s"
-                        cur.execute(query1, (session['personid'], instanceID))
-                        response = cur.fetchone()[0]
-                        try:
-                            query5 = "SELECT username FROM person WHERE personid = '%s'"
-                            cur.execute(query5 % questionInfo[3])
-                            creator = cur.fetchone()[0]
-                        except:
-                            errorMessage = "Error Getting Question Creator"
-                            print "Error Getting Question Creator"
-                    except:
-                        errorMessage = "Error Getting Short Anwser Response"
-                        print "Error Getting Short Answer Response"
-                except:
-                    errorMessage = "Error Getting Short Answer Question"
-                    print "Error Getting Short Answer Question"     
-                    
-            if typeID == "multipleChoice":
-                try:
-                    questionType = "Multiple Choice"
-                    query1 = "SELECT question, image, answerid, adminowner FROM multiple_choice_q WHERE questionid = '%s'"
-                    cur.execute(query1 % questionID)
-                    questionInfo = cur.fetchone()
-                    try:
-                        query2 = "SELECT choicetext, choiceid FROM choices WHERE questionid = '%s'"
-                        cur.execute(query2 % questionID)
-                        choiceInfo = cur.fetchall()
-                        try:
-                            query3 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
-                            cur.execute(query3 % questionInfo[2])
-                            answerInfo = cur.fetchone()[0]
-                            try:
-                                query5 = "SELECT username FROM person WHERE personid = '%s'"
-                                cur.execute(query5 % questionInfo[3])
-                                creator = cur.fetchone()[0]
-                                try:
-                                    query1 = "SELECT choiceid FROM multiple_choice_ans WHERE userid = %s AND instanceid = %s"
-                                    cur.execute(query1, (session['personid'], instanceID))
-                                    responseAnswer = cur.fetchone()[0]
-                                    try:
-                                        query6 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
-                                        cur.execute(query6 % responseAnswer)
-                                        response = cur.fetchone()[0]
-                                    except:
-                                        errorMessage = "Error Getting Multiple Choice Answer Response"
-                                        print "Error Getting Multiple Choice Answer Response"
-                                except:
-                                    errorMessage = "Error Getting Multiple Choice Response"
-                                    print "Error Getting Multiple Choice Response"
-                            except:
-                                errorMessage = "Error Getting Question Creator"
-                                print "Error Getting Question Creator"
-                        except:
-                            errorMessage = "Error Getting Answer"
-                            print "Error Getting Answer" 
-                    except:
-                        errorMessage = "Error Getting Choices"
-                        print "Error Getting Choices"  
-                except:
-                    errorMessage = "Error Getting Multiple Choice Question"
-                    print "Error Getting Multiple Choice Question"  
-                    
-            if typeID == "map":
-                try:
-                    questionType = "Map"
-                    query1 = "SELECT question, image, answer, adminowner FROM map_selection_q WHERE questionid = '%s'"
-                    cur.execute(query1 % questionID)
-                    questionInfo = cur.fetchone()
-                    try:
-                        query5 = "SELECT username FROM person WHERE personid = '%s'"
-                        cur.execute(query5 % questionInfo[3])
-                        creator = cur.fetchone()[0]
-                        try:
-                            query1 = "SELECT xco, yco FROM map_selection_ans WHERE userid = %s AND instanceid = %s"
-                            cur.execute(query1, (session['personid'], instanceID))
-                            response1 = cur.fetchone()
-                            response = "(" + str(response1[0]) + ", " + str(response1[1]) + ")"
-                        except:
-                            errorMessage = "Error Getting Map Response"
-                            print "Error Getting Map Response"
-                    except:
-                        errorMessage = "Error Getting Question Creator"
-                        print "Error Getting Question Creator"
-                except:
-                    errorMessage = "Error Getting Map Question"
-                    print "Error Getting map Question"  
-        except:
-            errorMessage = "Error Getting QuestionId"
-            print "Error Getting QuestionID"
         
-        if typeID == "shortAnswer":
-            try:
-                query = "SELECT response FROM short_answer_ans WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-                
-        elif typeID == 'multipleChoice':
-            #choiceID = request.form['option']
-            try:
-                query = "SELECT t1.choiceid FROM multiple_choice_ans t1 INNER JOIN choices t2 ON t1.choiceid = t2.choiceid WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-                #choices = ("Choicey","Choicer","Choicest","Choico")
-                #results = (22,33,44,55)
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-                
-        elif typeID == 'map':
-            try:
-                query = "SELECT xco, yco FROM map_selection_ans WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-        print "Results:"
-        print results
-        print "Choices:"
-        print choices
-        return render_template('viewStatistics.html', questionType = typeID, error = errorMessage, results = results)
-    
-    #return redirect(url_for('closedQuestions'))
-    
-    #    return redirect(url_for('homeAdmin'))
+        return redirect(url_for('homeAdmin'))
 
     return render_template('homeAdmin.html', error=errorMessage)
 
@@ -1516,4 +1371,4 @@ def viewResponse():
 
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=8080)
