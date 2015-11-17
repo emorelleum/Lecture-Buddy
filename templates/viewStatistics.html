@@ -10,7 +10,7 @@
 		var valuesUse = [];
 
 		for(var i = 0; i < results.length; i++){
-			labelsUse.push(results[i][0]);
+			labelsUse.push(i + 1);
 			valuesUse.push(results[i][1]);
 		}
 		// bar chart data
@@ -38,13 +38,19 @@
 		<div class="extra2 container">
 			<div class="ebox1">
 			<div class="title">
-				<h2>{{questionType}}</h2>
+				<h2>{{questionType}} Results</h2>
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
 				{% if questionType == "Multiple Choice" %}
 					<canvas id="income" width="600" height="400" onload='barChart({{results}})'>
 						
 					</canvas>
+					</br>
+					<hr style="width: 100%"/>
+					</br>
+					<div class="title">
+						<h2>Question Info</h2>
+					</div>
 				{% endif %}
 				{% if question[1] != "" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
