@@ -19,7 +19,7 @@
 					<script type="text/javascript">
 						var canvas = document.getElementById('canvas');
 						var context = canvas.getContext('2d');
-						
+
 						createImage();
 						
 						function createImage(){
@@ -86,7 +86,9 @@
 
 					<input class="button" type="submit" name="submit" value="Submit"/>
 					<div id="check2" style="visibility: hidden">
-						<input id='check' type='text' name='check' value='' style='visibility: hidden' required>
+						{% if questionType == "Map" %}
+							<input id='check' type='text' name='check' value='' style='visibility: hidden' required>
+						{% endif %}
 					</div>
 				</form>
 			</div>

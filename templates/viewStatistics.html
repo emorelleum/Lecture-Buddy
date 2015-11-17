@@ -1,26 +1,28 @@
-{% extends "layoutStudent.html" %}
+{% extends "layoutAdmin.html" %}
 
 {% block content %}
 
-<body onload="barChart()">
+<body onload="barChart({{results}})">
 <script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/Chart.js/Chart.min.js') }}"></script>
 <script language="JavaScript" type="text/javascript">
-	function barChart(){
+	function barChart(results){
+		var labelsUse = [];
+		var valuesUse = [];
+
+		for(var i = 0; i < results.length; i++){
+			labelsUse.push(results[i][0]);
+			valuesUse.push(results[i][1]);
+		}
 		// bar chart data
 		var barData = {
-		labels : ["January","February","March","April","May","June"],
-		datasets : [
-			{
-				fillColor : "#48A497",
-				strokeColor : "#48A4D1",
-				data : [456,479,324,569,702,600]
-			},
-			{
-				fillColor : "rgba(73,188,170,0.4)",
-				strokeColor : "rgba(72,174,209,0.4)",
-				data : [364,504,605,400,345,320]
-			}
-			]
+			labels : labelsUse,
+			datasets : [
+				{
+					fillColor : "#04B45F",
+					strokeColor : "#3D3D3D",
+					data : valuesUse
+				}
+				]
 		};
 		
 		// get bar chart canvas
@@ -39,9 +41,11 @@
 				<h2>{{questionType}}</h2>
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
-				<canvas id="income" width="600" height="400">
-					
-				</canvas>
+				{% if questionType == "Multiple Choice" %}
+					<canvas id="income" width="600" height="400" onload='barChart({{results}})'>
+						
+					</canvas>
+				{% endif %}
 				{% if question[1] != "" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
 					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">

@@ -188,7 +188,7 @@ def homeAdmin():
     
 @app.route('/homeStudent', methods=['GET', 'POST'])
 def homeStudent():
-    if 'username' not in session:
+    if 'admin' not in session:
         return redirect(url_for('welcome'))
     
     conn = connectToDB()
@@ -397,6 +397,12 @@ def createQuestion():
     
 @app.route('/createClass', methods=['GET', 'POST'])
 def createClass():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     #Connect to the database.
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -448,6 +454,9 @@ def createClass():
 
 @app.route('/joinClass', methods=['GET', 'POST'])
 def joinClass():
+    if 'admin' not in session:
+        return redirect(url_for('welcome'))
+
     #Connect to the database.
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -485,17 +494,6 @@ def joinClass():
         return redirect(url_for('homeStudent'))
         
     return render_template('homeStudent.html', error = errorMessage)  
-
-@app.route('/viewStatistics')
-def viewStatistics():
-    if 'admin' in session:
-        if not session['admin']:
-            return redirect(url_for('welcome'))
-    else:
-        return redirect(url_for('welcome'))
-        
-    return render_template('viewStatistics.html')
-
 
 @app.route('/viewInstance', methods=['GET', 'POST'])
 def viewInstance():
@@ -766,6 +764,11 @@ def questionBank():
     
 @app.route('/deleteQuestion', methods=['GET', 'POST'])
 def deleteQuestion():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
     #We need to delete instances too.
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -809,6 +812,14 @@ def deleteQuestion():
             except:
                 errorMessage = "Error Deleting Map Selection Question"
                 print "Error Deleting Map Selection Question"
+        #Delete all of the question instances that are attached to the question.
+        try:
+            query = "DELETE FROM question_instance WHERE questionid = %s AND questiontype = %s"
+            cur.execute(query, (questionID, questionType))
+            conn.commit()
+        except:
+            errorMessage = "Error Deleting Question Instances"
+            print "Error Deleting Question Instances"
         
         return redirect(url_for('questionBank'))
 
@@ -816,7 +827,12 @@ def deleteQuestion():
 
 @app.route('/deleteInstance', methods=['GET', 'POST'])
 def deleteInstance():
-    #We need to delete instances too.
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -838,6 +854,12 @@ def deleteInstance():
     
 @app.route('/closeInstance', methods=['GET', 'POST'])
 def closeInstance():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -853,13 +875,18 @@ def closeInstance():
             errorMessage = "Error Closing Question Instance"
             print "Error Closing Question Instance"
         
-        
-        return redirect(url_for('getStatistics'), code = 307)
+        return redirect(url_for('homeAdmin'))
         
     return render_template('homeAdmin.html', error=errorMessage)
 
 @app.route('/openInstance', methods=['GET', 'POST'])
 def openInstance():
+    if 'admin' in session:
+        if not session['admin']:
+            return redirect(url_for('welcome'))
+    else:
+        return redirect(url_for('welcome'))
+        
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -1019,53 +1046,58 @@ def questionResponse():
         
     return redirect(url_for('previousQuestions'))
     
-@app.route('/getStatistics', methods=['GET', 'POST'])
-def getStatistics():
-    
+@app.route('/viewStatistics', methods=['GET', 'POST'])
+def viewStatistics():
     if 'admin' not in session:
         return redirect(url_for('welcome'))
         
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    errorMessage = ""    
+    errorMessage = ""   
+    results = []
+    questionType = ""
+    answerInfo = ""
+    choiceInfo = []
+    questionInfo = []
+    errorMessage = ""
+    response = ""
+    
     if request.method == 'POST':
         instanceID = request.form['instanceID']
-        choices = []
-        results = []
-        #questionType = "Multiple Choice"
-        #questionInfo = ("Test Quesiton","12")
+        
         try:
             query1 = "SELECT questionid, questiontype FROM question_instance WHERE instanceid = '%s'"
             cur.execute(query1 % instanceID)
             instanceInfo = cur.fetchone()
             questionID = instanceInfo[0]
-            typeID = instanceInfo[1]
-            if typeID == "shortAnswer":
+            questionType = instanceInfo[1]
+            
+            if questionType == "shortAnswer":
                 try:
                     questionType = "Short Answer"
                     query1 = "SELECT question, image, answer, adminowner FROM short_answer_q WHERE questionid = '%s'"
                     cur.execute(query1 % questionID)
                     questionInfo = cur.fetchone()
                     try:
-                        query1 = "SELECT response FROM short_answer_ans WHERE userid = %s AND instanceid = %s"
-                        cur.execute(query1, (session['personid'], instanceID))
-                        response = cur.fetchone()[0]
+                        query5 = "SELECT username FROM person WHERE personid = '%s'"
+                        cur.execute(query5 % questionInfo[3])
+                        creator = cur.fetchone()[0]
                         try:
-                            query5 = "SELECT username FROM person WHERE personid = '%s'"
-                            cur.execute(query5 % questionInfo[3])
-                            creator = cur.fetchone()[0]
+                            query = "SELECT response FROM short_answer_ans WHERE instanceid = '%s'"
+                            cur.execute(query % instanceID)
+                            results = cur.fetchall()
                         except:
-                            errorMessage = "Error Getting Question Creator"
-                            print "Error Getting Question Creator"
+                            errorMessage = "Error Fetching Short Answer Question Responses"
+                            print "Error Fetching Short Answer Question Responses"
                     except:
-                        errorMessage = "Error Getting Short Anwser Response"
-                        print "Error Getting Short Answer Response"
+                        errorMessage = "Error Getting Question Creator"
+                        print "Error Getting Question Creator"
                 except:
                     errorMessage = "Error Getting Short Answer Question"
                     print "Error Getting Short Answer Question"     
                     
-            if typeID == "multipleChoice":
+            if questionType == "multipleChoice":
                 try:
                     questionType = "Multiple Choice"
                     query1 = "SELECT question, image, answerid, adminowner FROM multiple_choice_q WHERE questionid = '%s'"
@@ -1080,26 +1112,26 @@ def getStatistics():
                             cur.execute(query3 % questionInfo[2])
                             answerInfo = cur.fetchone()[0]
                             try:
-                                query5 = "SELECT username FROM person WHERE personid = '%s'"
-                                cur.execute(query5 % questionInfo[3])
-                                creator = cur.fetchone()[0]
+                                query = "SELECT choiceid FROM multiple_choice_ans WHERE instanceid = '%s'"
+                                cur.execute(query % instanceID)
+                                results1 = cur.fetchall()
+                                temp = []
+                                for choice in results1:
+                                    temp.append(choice[0])
+                                    
+                                for item in choiceInfo:
+                                    results.append([item[1], temp.count(item[1])])
+                                    
                                 try:
-                                    query1 = "SELECT choiceid FROM multiple_choice_ans WHERE userid = %s AND instanceid = %s"
-                                    cur.execute(query1, (session['personid'], instanceID))
-                                    responseAnswer = cur.fetchone()[0]
-                                    try:
-                                        query6 = "SELECT choicetext FROM choices WHERE choiceid = '%s'"
-                                        cur.execute(query6 % responseAnswer)
-                                        response = cur.fetchone()[0]
-                                    except:
-                                        errorMessage = "Error Getting Multiple Choice Answer Response"
-                                        print "Error Getting Multiple Choice Answer Response"
+                                    query5 = "SELECT username FROM person WHERE personid = '%s'"
+                                    cur.execute(query5 % questionInfo[3])
+                                    creator = cur.fetchone()[0]
                                 except:
-                                    errorMessage = "Error Getting Multiple Choice Response"
-                                    print "Error Getting Multiple Choice Response"
+                                    errorMessage = "Error Getting Question Creator"
+                                    print "Error Getting Question Creator"
                             except:
-                                errorMessage = "Error Getting Question Creator"
-                                print "Error Getting Question Creator"
+                                errorMessage = "Error Fetching Multiple Choice Question Responses"
+                                print "Error Fetching Multiple Choice Question Responses"
                         except:
                             errorMessage = "Error Getting Answer"
                             print "Error Getting Answer" 
@@ -1110,7 +1142,7 @@ def getStatistics():
                     errorMessage = "Error Getting Multiple Choice Question"
                     print "Error Getting Multiple Choice Question"  
                     
-            if typeID == "map":
+            if questionType == "map":
                 try:
                     questionType = "Map"
                     query1 = "SELECT question, image, answer, adminowner FROM map_selection_q WHERE questionid = '%s'"
@@ -1121,13 +1153,14 @@ def getStatistics():
                         cur.execute(query5 % questionInfo[3])
                         creator = cur.fetchone()[0]
                         try:
-                            query1 = "SELECT xco, yco FROM map_selection_ans WHERE userid = %s AND instanceid = %s"
-                            cur.execute(query1, (session['personid'], instanceID))
-                            response1 = cur.fetchone()
-                            response = "(" + str(response1[0]) + ", " + str(response1[1]) + ")"
+                            query = "SELECT xco, yco FROM map_selection_ans WHERE instanceid = '%s'"
+                            cur.execute(query % instanceID)
+                            results1 = cur.fetchall()
+                            for item in results1:
+                                results.append([item[0], item[1]])
                         except:
-                            errorMessage = "Error Getting Map Response"
-                            print "Error Getting Map Response"
+                            errorMessage = "Error Fetching Map Question Responses"
+                            print "Error Fetching Map Question Response"
                     except:
                         errorMessage = "Error Getting Question Creator"
                         print "Error Getting Question Creator"
@@ -1137,46 +1170,8 @@ def getStatistics():
         except:
             errorMessage = "Error Getting QuestionId"
             print "Error Getting QuestionID"
-        
-        if typeID == "shortAnswer":
-            try:
-                query = "SELECT response FROM short_answer_ans WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-                
-        elif typeID == 'multipleChoice':
-            #choiceID = request.form['option']
-            try:
-                query = "SELECT t1.choiceid FROM multiple_choice_ans t1 INNER JOIN choices t2 ON t1.choiceid = t2.choiceid WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-                #choices = ("Choicey","Choicer","Choicest","Choico")
-                #results = (22,33,44,55)
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-                
-        elif typeID == 'map':
-            try:
-                query = "SELECT xco, yco FROM map_selection_ans WHERE instanceid = %s"
-                cur.execute(query, (instanceID,))
-                results = cur.fetchall()
-            except:
-                errorMessage = "Error Fetching Question Stats"
-                print "Error Fetching Question Stats"
-        print "Results:"
-        print results
-        print "Choices:"
-        print choices
-        return render_template('viewStatistics.html', questionType = typeID, error = errorMessage, results = results, questionInfo = questionInfo)
-    
-    #return redirect(url_for('closedQuestions'))
-    
-    #    return redirect(url_for('homeAdmin'))
-    return render_template('homeAdmin.html', error=errorMessage)
+    print results  
+    return render_template('viewStatistics.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=instanceID, response=response, results=results)
 
 @app.route('/previousQuestions')
 def previousQuestions():
