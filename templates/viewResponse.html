@@ -1,7 +1,7 @@
 {% extends "layoutStudent.html" %}
 
 {% block content %}
-
+<body onload="createImage({{responseMap}})">
 <div id="wrapper">
 	<div id="featured-wrapper">
 		<div class="extra2 container">
@@ -12,7 +12,28 @@
 			</div>
 				{% if question[1] != "" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
-					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
+					<canvas id="canvas" width=600px height=350px style="border: 3px solid #3D3D3D"></canvas>
+
+					<script type="text/javascript">
+						function createImage(coordinates){
+							var canvas = document.getElementById("canvas");
+							var context = canvas.getContext('2d');
+							var imageObj = new Image();
+							var map = coordinates;
+							var questionType = "{{questionType}}";
+							imageObj.src = "{{location}}";
+						
+							imageObj.onload = function() {
+								context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, canvas.width, canvas.height);
+								if(questionType == "Map"){
+									var pin = new Image();
+									pin.src = "../static/pin.png";
+									context.drawImage(pin, map[0] - 9, map[1] - 24, 14, 24);
+								}
+							};
+						}
+						
+					</script>
 				{% endif %}
 				
 				<h1 align=left style="align:left">Question:</h1></br>
@@ -28,8 +49,12 @@
 				{% endif %}
 				
 				{% if response != "" %}
-					<h1 align=left style="align:left">Your Response:</h1></br>
-					<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{response}}</p>
+					{% if questionType == "Map" %}
+						<body onload="putPin({{response}})">
+					{% else %}
+						<h1 align=left style="align:left">Your Response:</h1></br>
+						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{response}}</p>
+					{% endif %}
 				{% endif %}
 				
 				{% if question[2] != "" %}

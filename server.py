@@ -1253,6 +1253,7 @@ def viewResponse():
     questionInfo = []
     errorMessage = ""
     response = ""
+    responseMap = []
     
     if request.method == 'POST':
         instanceID = request.form['instanceID']
@@ -1345,7 +1346,8 @@ def viewResponse():
                             query1 = "SELECT xco, yco FROM map_selection_ans WHERE userid = %s AND instanceid = %s"
                             cur.execute(query1, (session['personid'], instanceID))
                             response1 = cur.fetchone()
-                            response = "(" + str(response1[0]) + ", " + str(response1[1]) + ")"
+                            responseMap.append(response1[0])
+                            responseMap.append(response1[1])
                         except:
                             errorMessage = "Error Getting Map Response"
                             print "Error Getting Map Response"
@@ -1358,8 +1360,8 @@ def viewResponse():
         except:
             errorMessage = "Error Getting QuestionId"
             print "Error Getting QuestionID"
-            
-        return render_template('viewResponse.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=instanceID, response=response)
+
+        return render_template('viewResponse.html', responseMap=responseMap, question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=instanceID, response=response)
 
 if __name__ == '__main__':
     app.debug=True

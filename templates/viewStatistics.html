@@ -24,11 +24,41 @@
 		};
 		
 		// get bar chart canvas
-		var income = document.getElementById("income").getContext("2d");
+		var income = document.getElementById("bars").getContext("2d");
 		
 		// draw bar chart
 		var newChart = new Chart(income).Bar(barData);
 	}
+</script>
+
+<script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/heatmap.js/build/heatmap.js') }}"></script>
+<script language="JavaScript" type="text/javascript">
+	function map(results){
+		var datapoints = [];
+		// minimal heatmap instance configuration
+		for(var k = 0; k < results.length; k++){
+			var point = {
+			    x: results[k][0],
+			    y: results[k][1],
+			    value: 100,
+			  };
+			datapoints.push(point);
+		}
+		var heatmapInstance = h337.create({
+		  // only container is required, the rest will be defaults
+		  container: document.getElementById('maps')
+		});
+		
+		// heatmap data format
+		var data = { 
+		  max: results.length * 25, 
+		  data: datapoints 
+		};
+		// if you have a set of datapoints always use setData instead of addData
+		// for data initialization
+		heatmapInstance.setData(data);
+	}
+	
 </script>
 
 <div id="wrapper">
@@ -41,7 +71,7 @@
 			</div>
 				{% if questionType == "Multiple Choice" %}
 					<body onload="barChart({{results}})">
-					<canvas id="income" width="600" height="400">
+					<canvas id="bars" width="600" height="400">
 						
 					</canvas>
 					</br>
@@ -51,7 +81,23 @@
 						<h2>Question Info</h2>
 					</div>
 				{% endif %}
-				{% if question[1] != "" %}
+				
+				{% if questionType == "Map" %}
+					<body onload="map({{results}})">
+					<div id="maps" style="width:600px; height:350px">
+						{% if question[1] != "" %}
+							{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
+							<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
+						{% endif %}
+					</div>
+					</br>
+					<hr style="width: 100%"/>
+					</br>
+					<div class="title">
+						<h2>Question Info</h2>
+					</div>
+				{% endif %}
+				{% if question[1] != "" and questionType != "Map" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
 					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
 				{% endif %}
