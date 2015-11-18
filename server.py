@@ -12,7 +12,7 @@ app.secret_key = os.urandom(24).encode('hex')
 ADMIN_CODE = "546238"
 
 def connectToDB():
-  connectionString = 'dbname=lecturebuddy user=postgres password=1QAZ3edc host=localhost'
+  connectionString = 'dbname=lecturebuddy user=postgres password=beatbox host=localhost'
   try:
     return psycopg2.connect(connectionString)
   except:
@@ -1488,4 +1488,4 @@ def viewGlobalStatistics():
 
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=8080)
