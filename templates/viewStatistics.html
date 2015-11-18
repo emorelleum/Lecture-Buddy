@@ -1,7 +1,6 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
-
 <script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/Chart.js/Chart.min.js') }}"></script>
 <script language="JavaScript" type="text/javascript">
 	function barChart(results){
@@ -41,7 +40,8 @@
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
 				{% if questionType == "Multiple Choice" %}
-					<canvas id="income" width="600" height="400" onload="barChart({{results}})">
+					<body onload="barChart({{results}})">
+					<canvas id="income" width="600" height="400">
 						
 					</canvas>
 					</br>
