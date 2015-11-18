@@ -97,6 +97,7 @@
 						<h2>Question Info</h2>
 					</div>
 				{% endif %}
+				
 				{% if question[1] != "" and questionType != "Map" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
 					<img src="{{location}}" style="width:100%; height:100%; border: 3px solid #3D3D3D">
@@ -126,6 +127,14 @@
 					{% else %}
 						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{question[2]}}</p>
 					{% endif %}
+				{% endif %}
+				
+				{% if questionType == "Short Answer" %}
+					{% for item in results %}
+						<div style="width:280px; height:100px; overflow:auto; display: inline-block; border: 3px solid #3D3D3D; float:left; margin-left: 10px; margin-bottom: 10px">
+							<p style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{item[0]}}</p>
+						</div>
+					{% endfor %}
 				{% endif %}
 			</div>
 		</div>
