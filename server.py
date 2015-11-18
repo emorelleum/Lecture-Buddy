@@ -1210,8 +1210,8 @@ def previousQuestions():
         print "Error Gathering All Classes"
         
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN short_answer_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
-        cur.execute(query)
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (short_answer_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN short_answer_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'shortAnswer') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t5.userid = t4.personid) WHERE t4.personid = '%s'"
+        cur.execute(query % session['personid'])
         elements = cur.fetchall()
         for element in elements:
             openQs.append(element)
@@ -1219,8 +1219,8 @@ def previousQuestions():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN multiple_choice_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
-        cur.execute(query)
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (multiple_choice_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN multiple_choice_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'multipleChoice') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t5.userid = t4.personid) WHERE t4.personid = '%s'"
+        cur.execute(query % session['personid'])
         elements = cur.fetchall()
         for element in elements:
             openQs.append(element)
@@ -1228,8 +1228,8 @@ def previousQuestions():
         errorMessage = "Error Gathering Open Questions"
         print "Error Gathering Open Questions"
     try:
-        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN map_selection_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t1.adminowner = t4.personid)"
-        cur.execute(query)
+        query = "SELECT t1.question, t2.instanceid, t3.classid FROM (map_selection_ans t5 INNER JOIN question_instance t2 ON (t5.instanceid = t2.instanceid) INNER JOIN map_selection_q t1 ON (t1.questionid = t2.questionid AND t2.questiontype = 'map') INNER JOIN class t3 ON t3.classid = t2.classid INNER JOIN person t4 on t5.userid = t4.personid) WHERE t4.personid = '%s'"
+        cur.execute(query % session['personid'])
         elements = cur.fetchall()
         for element in elements:
             openQs.append(element)

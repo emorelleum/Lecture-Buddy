@@ -2,7 +2,6 @@
 
 {% block content %}
 
-<body onload="barChart({{results}})">
 <script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/Chart.js/Chart.min.js') }}"></script>
 <script language="JavaScript" type="text/javascript">
 	function barChart(results){
@@ -42,7 +41,7 @@
 				<span class="byline"><font color="red">{{error}}</font></span>
 			</div>
 				{% if questionType == "Multiple Choice" %}
-					<canvas id="income" width="600" height="400" onload='barChart({{results}})'>
+					<canvas id="income" width="600" height="400" onload="barChart({{results}})">
 						
 					</canvas>
 					</br>
@@ -75,7 +74,7 @@
 				{% endif %}
 				
 				{% if question[2] != "" %}
-					<h1 align=left style="align:left">Answer:</h1></br>
+					</br><h1 align=left style="align:left">Answer:</h1></br>
 					{% if answerMC != "" %}
 						<p align=left style="font-family: arial; font-weight: bold; color: #323232; margin-left:20px">{{answerMC}}</p>
 					{% else %}
