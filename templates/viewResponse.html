@@ -12,7 +12,7 @@
 			</div>
 				{% if question[1] != "" %}
 					{% set location = "../static/pictures/" + creator + "/" + question[1] + "" %}
-					<canvas id="canvas" width=600px height=350px style="border: 3px solid #3D3D3D"></canvas>
+					<canvas id="canvas" width=600px height=350px style="border: 3px solid #3D3D3D;"></canvas>
 
 					<script type="text/javascript">
 						function createImage(coordinates){
@@ -28,7 +28,9 @@
 								if(questionType == "Map"){
 									var pin = new Image();
 									pin.src = "../static/pin.png";
-									context.drawImage(pin, map[0] - 9, map[1] - 24, 14, 24);
+									pin.onload = function(){
+										context.drawImage(pin, map[0] - 9, map[1] - 24, 14, 24);
+									};
 								}
 							};
 						}

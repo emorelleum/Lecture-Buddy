@@ -1,6 +1,7 @@
 html, body
 {
 	height: 100%;
+	width: 100%;
 }
 
 body
@@ -55,8 +56,9 @@ a:hover
 .container
 {
 	margin: 0px auto;
-	width: 1200px;
+	width: 100%;
 }
+
 
 p.question-text
 {
@@ -394,6 +396,7 @@ ul.contact li a.icon-rss:before
 		overflow: hidden;
 		padding: 0em 0em 0em 0em;
 		background: #04B45F url(images/overlay.png) repeat;
+		width: 100%;
 	}
 
 	#header
@@ -970,7 +973,8 @@ ul.contact li a.icon-rss:before
 .extra2 .ebox1,
 .extra2 .ebox2
 {
-	padding: 0em 20em;
+	padding: 0em  20%;
+	margin: auto
 }
 
 .extra2  .ebox1
@@ -1047,17 +1051,19 @@ ul.contact li a.icon-rss:before
 
 .form_settings span
 { float: left; 
-  width: 300px; 
-  text-align: left;}
+  width: 30%; 
+  text-align: left;
+  margin-left: 10%;
+}
   
 .form_settings .login
 { float: none; 
-  width: 300px; 
+  width: 20%; 
   text-align: left;}
   
 .form_settings input, .form_settings textarea
 { padding: 5px; 
-  width: 299px; 
+  width: 35%; 
   font: 100% arial; 
   border: 1px solid #000000; 
   background: #D1D0CE; 
@@ -1076,11 +1082,11 @@ ul.contact li a.icon-rss:before
 
 .form_settings textarea, .form_settings select
 { font: 100% arial; 
-  width: 299px;}
+  width: 35%;}
 
 .form_settings select
 { padding: 5px; 
-  width: 312px; 
+  width: 36.5%; 
   font: 100% arial; 
   border: 1px solid #000000; 
   background: #D1D0CE; 
@@ -1098,32 +1104,28 @@ ul.contact li a.icon-rss:before
 /*********************************************************************************/
 
 #addchoices{
-	width: 300px; 
+	width: 20%; 
 	height: 300px; 
 	position: absolute; 
-	background: #FFFFFF;
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
-	top: 50%;
-	left: 50%;
-	margin-left: -650px; 
-	margin-top: 180px; 
+	top: 525px;
+	text-align: center; 
+	vertical-align: middle;
 }
 
 #choices{
-	width: 300px; 
+	width: 20%; 
 	height: 300px; 
 	position: absolute; 
-	background: #FFFFFF;
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
-	top: 50%;
-	left: 50%;
-
-	margin-left: 335px; 
-	margin-top: 180px; 
+	top: 525px;
+	left: 78%;
+	text-align: center; 
+	vertical-align: middle;
 }
 
 	.buttonChoice
@@ -1158,8 +1160,10 @@ table
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
-	top: 65%;
+	top: 425px;
 	left: 35%;
+	text-align: center; 
+	vertical-align: middle;
 }
 
 #joinClass{
@@ -1171,9 +1175,10 @@ table
 	z-index: 9; 
 	font-family: arial; 
 	visibility: hidden;
-	top: 65%;
+	top: 425px;
 	left: 35%;
-
+	text-align: center; 
+	vertical-align: middle;
 }
 
 	.classButton

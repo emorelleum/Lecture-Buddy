@@ -1,6 +1,7 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
+
 <script language="JavaScript" type="text/javascript">
 
 var options = [];
@@ -35,8 +36,10 @@ var correctAnswer = "";
 	
 	function addchoice(){
 		var temp = document.getElementById('ChoiceToAdd').value;
-		options.push(temp);
-		writeChoices();
+		if(temp != ""){
+			options.push(temp);
+			writeChoices();
+		}
 	}
 	
 	function setAnswer(temp){
@@ -62,10 +65,10 @@ var correctAnswer = "";
 				document.getElementById('answerBox').value = correctAnswer;
 			}
 			if(window.options[i] == correctAnswer){
-				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' checked='checked' value='" + window.options[i] + "'>" + window.options[i].substring(0,20) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left;' height:15px; width:15px' checked='checked' value='" + window.options[i] + "'><a style='margin-left: 4px; float: left; width:50%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;'>" + options[i] + "</a><input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></div></br>");
 			}
 			else{
-				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left; margin-right:40px' height:15px; width:15px' value='" + window.options[i] + "'>" + window.options[i].substring(0,20) + "...<input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></p>");
+				document.getElementById('allOptions').innerHTML += ("<p><input type='radio' onclick=setAnswer(this) name='option' style='float:left;' height:15px; width:15px' value='" + window.options[i] + "'><a style='margin-left: 4px; float: left; width: 50%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;'>" + options[i] + "</a><input class='buttonChoice' type='submit' style='float: right' onclick=deleteChoice(" + i + ") value='Delete'></div></br>");
 			}
 			document.getElementById('createForm').innerHTML += ("<input type='hidden' name='hiddenChoice' value='" + window.options[i] + "'>");
 		} 
@@ -106,7 +109,6 @@ var correctAnswer = "";
 						<div id="createForm" style='visibility: hidden'>
 							
 						</div>
-						
 					</div>
 					<input class="button" type="submit" name="createQuestion" value="Create Question"/></br>
 					<div id="check2" style="visibility: hidden">
@@ -116,32 +118,29 @@ var correctAnswer = "";
 			</div>		
 		</div>	
 	</div>
-</div>
-
-
-<div id="addchoices"> 
-	<center>
-	<div class="title">
-		<h2>Add Choice</h2>
-		<span class="byline">Add A Choice For The Question</span>
-		<div class="form_settings">
-			<p><h3>Input Choice</h3><textarea id="ChoiceToAdd" style="resize:none; width:250px" rows="4" cols="50" name="choice" value=""></textarea></p>
-		</div>
-		<input class="button" type="submit" onclick="addchoice()" name="addChoice" value="Add Choice"/>
-	</div>
-	</center>
-</div>
-
-<div id="choices"> 
-	<center>
-	<div class="title">
-		<h2>Choices</h2>
-		<span class="byline">Choices For Question</span>
-		<div id="allOptions" style='height:300px; overflow:auto'>
+	<div id="addchoices"> 
+		<div class="title">
+			<h2>Add Choice</h2>
+			<span class="byline">Add A Choice For The Question</span>
+			<div class="form_settings">
+				<p><h3>Input Choice</h3><textarea id="ChoiceToAdd" style="resize:none; width:80%" rows="4" cols="50" name="choice" value=""></textarea></p>
+			</div>
+			<input class="button" type="submit" onclick="addchoice()" name="addChoice" value="Add Choice"/>
 		</div>
 	</div>
-	</center>
+	
+	<div id="choices"> 
+		<div class="title">
+			<h2>Choices</h2>
+			<span class="byline">Choices For Question</span>
+			<div id="allOptions" style='height:300px; overflow:auto; width:100%'>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+
 
 
 {% endblock %}

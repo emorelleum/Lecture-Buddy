@@ -20,7 +20,7 @@
 		document.getElementById('allQuestions').innerHTML = "";
 		for(var i = 0; i < questions.length; i++){
 			if(questions[i][2] == classInfo[0]){
-				document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer' onclick='viewInstance("+ questions[i][1] +")' title='" + questions[i][0] + "'>" + (i + 1) + ". " + questions[i][0].substring(0,100) + "</a><form style='align:right; display:inline' action='/viewInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Respond'></form></p>";
+				document.getElementById('allQuestions').innerHTML += "<p align='left' style='margin-left: 10px; display:inline'><a style='float:left; cursor:pointer; width:70%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;' onclick='viewInstance("+ questions[i][1] +")' title='" + questions[i][0] + "'>" + (i + 1) + ". " + questions[i][0] + "</a><form style='align:right; display:inline' action='/viewInstance' method='POST'><input type='hidden' name='instanceID' value='" + questions[i][1] + "'><input class='buttonChoice' type='submit' style='float: right; margin-right: 10px; margin-top: 7px' value='Respond'></form></p>";
 			}
 		}
 	}
@@ -55,26 +55,23 @@
 		<!-- Fill With JavaScript -->
 		</div>
 	</div>
-</div>
-
-<div id="joinClass"> 
-	<center>
-	<div class="title">
-		<h2 style="display: inline; margin-left:60px">Join Class</h2>
-		<input class="closeButton" type="submit"  name="exit" value="X" onclick="hideJoinClass()"/></br>
-		<span class="byline">Join A Class</span>
-		<form action="/joinClass" method="POST">
-			<div id=classes class="form_settings">
-				<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1 required>
-					{% for class in classes %}
-						<option value='{{class}}'>{{class}}</option>
-					{% endfor %}
-				</select></p>
-			</div>
-			<input class="button" type="submit"  name="joinClass" value="Join Class"/>
-		</form>
+	<div id="joinClass"> 
+		<div class="title">
+			<h2 style="display: inline; margin-left:10%">Join Class</h2>
+			<input class="closeButton" type="submit"  name="exit" value="X" onclick="hideJoinClass()"/></br>
+			<span class="byline">Join A Class</span>
+			<form action="/joinClass" method="POST">
+				<div id=classes class="form_settings">
+					<p style="margin:20px"><span style="width:100px">Class Name:</span><select style="width:200px" name="availableClasses" size=1 required>
+						{% for class in classes %}
+							<option value='{{class}}'>{{class}}</option>
+						{% endfor %}
+					</select></p>
+				</div>
+				<input class="button" type="submit"  name="joinClass" value="Join Class"/>
+			</form>
+		</div>
 	</div>
-	</center>
 </div>
 
 <div id="link" style='visibility:hidden'>
