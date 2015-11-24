@@ -78,7 +78,7 @@ def register():
             errorMessage = "Passwords Do Not Match"
         
     
-    return render_template('register.html', error = errorMessage)
+    return render_template('register.html', error = errorMessage, admin=ADMIN_CODE)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
