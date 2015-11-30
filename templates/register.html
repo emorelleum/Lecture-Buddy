@@ -6,11 +6,11 @@
 		var temp = document.getElementById('admin').value;
 		if(temp != admin1){
 			if(confirm("The Admin Code is missing or incorect. Would you like to register as a student?")){
-				document.getElementById('register').submit();
+				return true;
 			}
-		}
-		else{
-			document.getElementById('register').submit();
+			else{
+				return false;
+			}
 		}
 	}
 
@@ -25,7 +25,7 @@
 					<span class="byline">Enter The Following Information</span></br>
 					<span class="byline"><font color="red">{{error}}</font></span>
 				</div>
-				<form action="/register" id="register" method="POST">
+				<form action="/register" id="register" method="POST" onsubmit="return check({{admin}})">
 					<div class="form_settings">
 						<p><span>First Name:</span><input class="contact" type="text" name="firstName" value="" maxlength="50" required/></p>
 						<p><span>Last Name:</span><input class="contact" type="text" name="lastName" value=""  maxlength="50" required/></p>
@@ -34,7 +34,7 @@
 						<p><span>Re-Enter Password:</span><input class="contact" type="password" name="password2" value="" maxlength="50"required/></p>
 						<p><span>Admin Code:</span><input class="contact" id="admin" type="text" name="adminCode" value="" maxlength="50"/></p>
 					</div>
-					<input class="button" type="button" onclick="check({{admin}})" name="register" value="Register"/>
+					<input class="button" id="submitButton" type="submit" name="register" value="Register"/>
 				</form>
 			</div>		
 		</div>	
