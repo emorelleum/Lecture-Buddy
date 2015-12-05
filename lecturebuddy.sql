@@ -1,3 +1,7 @@
+DROP DATABASE IF lecturebuddy;
+CREATE DATABASE  lecturebuddy;
+\c lecturebuddy;
+
 --
 -- PostgreSQL database dump
 --
