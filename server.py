@@ -1485,6 +1485,42 @@ def viewGlobalStatistics():
     print results  
     return render_template('viewStatistics.html', question=questionInfo, creator=creator, choices=choiceInfo, answerMC=answerInfo, questionType=questionType, questionID=questionID, error=errorMessage, instanceID=questionID, response=response, results=results)
 
+@app.route('/deleteAll', methods=['GET', 'POST'])
+def deleteAll():
+    if 'admin' not in session:
+        return redirect(url_for('welcome'))
+        
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    try:
+        cur.execute("DELETE FROM map_selection_ans")
+        try:
+            cur.execute("DELETE FROM multiple_choice_ans")
+            try:
+                cur.execute("DELETE FROM short_answer_ans") 
+                try:
+                    cur.execute("DELETE FROM question_instance") 
+                    cur.execute("ALTER SEQUENCE question_instance_instanceid_seq RESTART WITH 1")
+                    try:
+                        cur.execute("DELETE FROM person_class_join WHERE personid IN (SELECT personid FROM person WHERE admin = 'f')") 
+                        try:
+                            cur.execute("DELETE FROM person WHERE admin = 'f'") 
+                        except:
+                            print "Error deleting person"
+                    except:
+                        print "Error deleting person_class_join"
+                except:
+                    print "Error deleting question_instance"
+            except:
+                print "Error deleting short_answer_ans"
+        except:
+            print "Error deleting multiple_choice_ans"
+    except:
+        print "Error deleting map_selection_ans"
+    
+    conn.commit()
+    return redirect(url_for('homeAdmin'))
 
 if __name__ == '__main__':
     app.debug=True

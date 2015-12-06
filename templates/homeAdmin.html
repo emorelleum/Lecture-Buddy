@@ -15,6 +15,17 @@
 			document.getElementById('createClass').style.visibility="hidden";
 	}
 	
+	function deleteAll(){
+		if(confirm("Are you sure you want to delete all the data in the database?")){
+			if(confirm("This should only be done at the end of the semester to free space. Are you sure?")){
+				if(confirm("Everything will be deleted but admin accounts and their questions, confirm one last time.")){
+					document.getElementById('deleteAll').innerHTML = "<form id='delete' style='visibility: hidden' action='/deleteAll' method='POST'></form>";
+					document.getElementById('delete').submit();
+				}
+			}
+		}
+	}
+	
 	function showInstances(classInfo){
 		document.getElementById('name').innerHTML = "<div class='title'><h2>" + classInfo[1] + "</h2></div>";
 		document.getElementById('allQuestions').innerHTML = "";
@@ -43,6 +54,7 @@
 		<div class="title">
 			<h2 style="float:centered">Home</h2>
 			<span class="byline"><font color="red">{{error}}</font></span>
+			<input style="float:left; margin-right: 0px; margin-left: 10px;" class="classButton" type="submit" onclick="deleteAll()" name="deleteAll" value="Clear Database"/>
 			<input style="float:right" class="classButton" type="submit" onclick="showCreateClass()" name="createClass" value="Create Class"/>
 		</div>
 		<div style="height:150px; width:92%; overflow-x:scroll ; overflow-y: hidden; margin: 0 auto; white-space: nowrap;">
@@ -79,4 +91,5 @@
 <div id="link" style='visibility:hidden'>
 	
 </div>
+<div id="deleteAll" style='visibility:hidden'></div>
 {% endblock %}
