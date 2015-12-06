@@ -1503,12 +1503,17 @@ def deleteAll():
                     cur.execute("DELETE FROM question_instance") 
                     cur.execute("ALTER SEQUENCE question_instance_instanceid_seq RESTART WITH 1")
                     try:
-                        cur.execute("DELETE FROM person_class_join WHERE personid IN (SELECT personid FROM person WHERE admin = 'f')") 
+                        cur.execute("DELETE FROM person_class_join")
                         try:
-                            cur.execute("DELETE FROM person WHERE admin = 'f'") 
-                            conn.commit()
+                            cur.execute("DELETE FROM class")
+                            cur.execute("ALTER SEQUENCE class_classid_seq RESTART WITH 1")
+                            try:
+                                cur.execute("DELETE FROM person WHERE admin = 'f'") 
+                                conn.commit()
+                            except:
+                                print "Error deleting person"
                         except:
-                            print "Error deleting person"
+                            print "Error deleting class"
                     except:
                         print "Error deleting person_class_join"
                 except:
