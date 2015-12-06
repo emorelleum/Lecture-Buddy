@@ -1506,6 +1506,7 @@ def deleteAll():
                         cur.execute("DELETE FROM person_class_join WHERE personid IN (SELECT personid FROM person WHERE admin = 'f')") 
                         try:
                             cur.execute("DELETE FROM person WHERE admin = 'f'") 
+                            conn.commit()
                         except:
                             print "Error deleting person"
                     except:
@@ -1519,7 +1520,6 @@ def deleteAll():
     except:
         print "Error deleting map_selection_ans"
     
-    conn.commit()
     return redirect(url_for('homeAdmin'))
 
 if __name__ == '__main__':
