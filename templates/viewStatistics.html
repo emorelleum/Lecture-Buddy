@@ -1,6 +1,17 @@
 {% extends "layoutAdmin.html" %}
 
 {% block content %}
+
+<!--
+The following javascript files where used in order to generate the graphics for the statistics.
+
+Heatmap.js by Patrick Wied
+	- Can be downloaded here: http://www.patrick-wied.at/static/heatmapjs/
+	
+Charts.js by Nick Downie
+	- Can be downloaded here: http://www.chartjs.org/
+-->
+
 <script language = "JavaScript" type="text/javascript" src="{{ url_for('static', filename='css/Chart.js/Chart.min.js') }}"></script>
 <script language="JavaScript" type="text/javascript">
 	function barChart(results){
